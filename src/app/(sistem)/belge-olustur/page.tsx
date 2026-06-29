@@ -166,7 +166,7 @@ export default function BelgeOlusturPage() {
     if (template) {
       setTur(template.tur)
       setBaslik(template.baslik)
-      setFormData({ ...template.fields })
+      setFormData(Object.fromEntries(Object.entries(template.fields).filter(([_, v]) => v !== undefined)))
     }
   }
  
