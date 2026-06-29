@@ -1,0 +1,42 @@
+services:
+  nextjs:
+    build: .
+    container_name: altu-nextjs
+    ports:
+      - "3215:3215"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/altuai
+      - PORT=3215
+    depends_on:
+      - db
+    networks:
+      - altu-net
+
+  python-backend:
+    build: ./python-backend
+    container_name: altu-python
+    ports:
+      - "8765:8765"
+    networks:
+      - altu-net
+      
+  db:
+    image: postgres:15-alpine
+    container_name: altu-db
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=altuai
+    ports:
+      - "5432:5432"
+    networks:
+      - altu-net
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+
+networks:
+  altu-net:
+    driver: bridge

@@ -1,0 +1,326 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  sifre     String
+  ad        String
+  soyad     String
+  baro      String?
+  sicilNo   String?
+  unvan     String?
+  adres     String?
+  telefon   String?
+  imza      String?
+  rol       String   @default("avukat")
+  createdAt DateTime @default(now())
+
+  dosyalar       Dava[]
+  musteri        Musteri[]
+  masraflar      Masraf[]
+  esmm           ESMM[]
+  fatura         Fatura[]
+  loglar         Log[]
+  isler          Is[]
+  belgeler       Belge[]
+  dosyaDosyalari DosyaDosyasi[]
+  uetsAyarlari     UetsAyarlari?
+  tebligatlar      Tebligat[]
+  mesajlasmaAyarlari MesajlasmaAyarlari?
+  bulkMesajlar     BulkMesaj[]
+}
+
+model Musteri {
+  id       String  @id @default(cuid())
+  ad       String
+  soyad    String
+  tcKimlik String?
+  telefon  String?
+  email    String?
+  adres    String?
+  notlar   String?
+  userId   String
+  createdAt DateTime @default(now())
+
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dosyalar Dava[]
+}
+
+model Dava {
+  id        String   @id @default(cuid())
+  dosyaNo   String   @unique
+  ad        String
+  konu      String?
+  durum     String   @default("devam-ediyor")
+  mahkeme   String?
+  esasNo    String?
+  kararNo   String?
+  aciklama  String?
+  musteriId String?
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  musteri    Musteri?       @relation(fields: [musteriId], references: [id], onDelete: SetNull)
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  durusmalar Durusma[]
+  masraflar  Masraf[]
+  belgeler   Belge[]
+  dosyalar   DosyaDosyasi[]
+  isler      Is[]
+  esmm       ESMM[]
+  fatura     Fatura[]
+  tebligatlar Tebligat[]
+}
+
+model Durusma {
+  id        String   @id @default(cuid())
+  baslik    String
+  aciklama  String?
+  tarih     DateTime
+  durum     String   @default("planlandi")
+  davaId    String
+  createdAt DateTime @default(now())
+
+  dava Dava @relation(fields: [davaId], references: [id], onDelete: Cascade)
+}
+
+model Is {
+  id         String    @id @default(cuid())
+  baslik     String
+  aciklama   String?
+  oncelik    String    @default("orta")
+  durum      String    @default("bekliyor")
+  sonTarih   DateTime?
+  tamamlandi Boolean   @default(false)
+  davaId     String?
+  userId     String
+  createdAt  DateTime  @default(now())
+
+  dava Dava? @relation(fields: [davaId], references: [id], onDelete: SetNull)
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Masraf {
+  id       String   @id @default(cuid())
+  baslik   String
+  tutar    Float
+  tarih    DateTime @default(now())
+  kategori String   @default("diger")
+  aciklama String?
+  davaId   String?
+  userId   String
+  createdAt DateTime @default(now())
+
+  dava Dava? @relation(fields: [davaId], references: [id], onDelete: SetNull)
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Belge {
+  id        String   @id @default(cuid())
+  baslik    String
+  icerik    String
+  tur       String   @default("dilekce")
+  davaId    String?
+  userId    String
+  createdAt DateTime @default(now())
+
+  dava Dava? @relation(fields: [davaId], references: [id], onDelete: SetNull)
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DosyaDosyasi {
+  id         String   @id @default(cuid())
+  orijinalAd String
+  kayitliAd  String
+  tur        String
+  boyut      Int?
+  etiketler  String?
+  davaId     String?
+  userId     String
+  createdAt  DateTime @default(now())
+
+  dava Dava? @relation(fields: [davaId], references: [id], onDelete: SetNull)
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ESMM {
+  id               String   @id @default(cuid())
+  seriNo           String   @unique
+  tarih            DateTime @default(now())
+  musteriUnvan     String?
+  hizmetAciklamasi String
+  birimFiyat       Float
+  miktar           Float    @default(1)
+  tutar            Float
+  kdvOrani         Float    @default(20)
+  kdvTutari        Float
+  netTutar         Float
+  odemeSekli       String   @default("nakit")
+  davaId           String?
+  userId           String
+  createdAt        DateTime @default(now())
+
+  dava Dava? @relation(fields: [davaId], references: [id], onDelete: SetNull)
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Fatura {
+  id           String   @id @default(cuid())
+  faturaNo     String   @unique
+  tur          String   @default("satis")
+  tarih        DateTime @default(now())
+  musteriUnvan String?
+  kalemler     String
+  araToplam    Float
+  kdvOrani     Float    @default(20)
+  kdvTutari    Float
+  genelToplam  Float
+  odemeSekli   String   @default("nakit")
+  odemeDurumu  String   @default("odenmedi")
+  davaId       String?
+  userId       String
+  createdAt    DateTime @default(now())
+
+  dava Dava? @relation(fields: [davaId], references: [id], onDelete: SetNull)
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  islem     String
+  aciklama  String?
+  detay     String?
+  seviye    String   @default("bilgi")
+  userId    String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model SozlesmeAnalizi {
+  id        String   @id @default(cuid())
+  tip       String
+  baslik    String
+  icerik    String
+  sonuc     String
+  riskPuani Int      @default(0)
+  maddeler  String?
+  userId    String
+  createdAt DateTime @default(now())
+}
+
+model DilekecePuanlama {
+  id        String   @id @default(cuid())
+  baslik    String?
+  icerik    String
+  puan      Int      @default(0)
+  detay     String?
+  oneriler  String?
+  userId    String
+  createdAt DateTime @default(now())
+}
+
+model HukukiCeviri {
+  id        String   @id @default(cuid())
+  kaynakDil String
+  hedefDil  String
+  asil      String
+  ceviri    String
+  userId    String
+  createdAt DateTime @default(now())
+}
+
+model BulkMesaj {
+  id        String   @id @default(cuid())
+  tur       String
+  konu      String
+  icerik    String
+  alicilar  String
+  durum     String   @default("bekliyor")
+  gonderilenSayi Int @default(0)
+  hataMesaj String?
+  userId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MesajlasmaAyarlari {
+  id              String @id @default(cuid())
+  userId          String @unique
+  smsProvider     String @default("netgsm")
+  smsApiKey       String?
+  smsApiSifre     String?
+  smsBaslik       String @default("ALTU AI")
+  smtpHost        String?
+  smtpPort        Int?
+  smtpKullanici   String?
+  smtpSifre       String?
+  smtpGuvenlik    String @default("tls")
+  whatsappApiKey  String?
+  whatsappTelNo   String?
+  whatsappProvider String @default("waba")
+  aktif           Boolean @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model KararHarita {
+  id        String   @id @default(cuid())
+  baslik    String
+  dugumler  String
+  kenarlar  String
+  userId    String
+  createdAt DateTime @default(now())
+}
+
+model UetsAyarlari {
+  id        String   @id @default(cuid())
+  kurumKodu String
+  kurumSifre String
+  kullaniciAdi String
+  sifre     String
+  sonGiris  DateTime?
+  aktif     Boolean  @default(false)
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tebligatlar Tebligat[]
+}
+
+model Tebligat {
+  id           String    @id @default(cuid())
+  tebligatNo   String
+  konu         String?
+  gonderen     String?
+  alici        String?
+  tur          String    @default("tebligat")
+  durum        String    @default("alindi")
+  icerik       String?
+  dosyaUrl     String?
+  dosyaTuru    String?
+  gonderimTarihi DateTime?
+  okunduTarihi DateTime?
+  davaId       String?
+  uetsId       String
+  userId       String
+  createdAt    DateTime  @default(now())
+
+  uets UetsAyarlari @relation(fields: [uetsId], references: [id], onDelete: Cascade)
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dava Dava?        @relation(fields: [davaId], references: [id], onDelete: SetNull)
+
+  @@unique([tebligatNo, uetsId])
+}

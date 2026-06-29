@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.venv
+logs
+data/scraper
+storage/data
+dev.db
+*.bat
+*.log
+.DS_Store
+.env
+.env.local
+.env.development
+.env.production
