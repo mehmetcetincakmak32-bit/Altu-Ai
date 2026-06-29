@@ -37,6 +37,18 @@ interface MasrafKategori {
   _sum: { tutar: number | null };
 }
 
+interface SureRadarItem {
+  id: string;
+  dosyaNo: string;
+  ad: string;
+  sureTakipNotu?: string;
+  yakinSure: {
+    tur: string;
+    tarih: string;
+    kalanGun: number;
+  };
+}
+
 interface Istatistik {
   davaSayisi: number;
   aktifDavaSayisi: number;
@@ -48,6 +60,7 @@ interface Istatistik {
   sonDurusmalar: SonDurusma[];
   aylikMasraflar: MasrafKategori[];
   esmmList: EsmmEntry[];
+  sureRadari?: SureRadarItem[];
 }
 
 const durumRenk: Record<string, string> = {
