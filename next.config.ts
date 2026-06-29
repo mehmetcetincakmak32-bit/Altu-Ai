@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
   },
-  turbopack: {
-    root: ".",
+  experimental: {
+    serverComponentsExternalPackages: ["fs", "path"],
   },
 };
 
