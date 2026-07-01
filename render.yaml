@@ -21,10 +21,7 @@ services:
           name: altu-postgres
           property: connectionString
       - key: NEXT_PUBLIC_PYTHON_URL
-        fromService:
-          name: altu-python
-          type: web
-          property: url
+        value: ""
 
   - type: web
     name: altu-python
