@@ -11,7 +11,7 @@ services:
     repo: https://github.com/mehmetcetincakmak32-bit/Altu-Ai
     plan: free
     buildCommand: npx prisma generate && npm run build
-    startCommand: npx prisma migrate deploy && npx prisma db seed && npx next start -H 0.0.0.0 -p $PORT
+    startCommand: npx prisma migrate deploy && npx prisma db seed && npx next start -H 0.0.0.0
     healthCheckPath: /
     envVars:
       - key: JWT_SECRET
