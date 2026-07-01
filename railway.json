@@ -5,7 +5,7 @@
     "buildCommand": "npm run build"
   },
   "deploy": {
-    "startCommand": "npx next start -H 0.0.0.0 -p $PORT",
+    "startCommand": "/bin/sh -c \"exec npx next start -H 0.0.0.0 -p $PORT\"",
     "healthcheckPath": "/",
     "restartPolicyType": "ON_FAILURE",
     "numReplicas": 1
