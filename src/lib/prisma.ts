@@ -93,33 +93,32 @@ const cuid = () => Math.random().toString(36).substring(2, 15) + Math.random().t
 function buildWhere(args: any): any {
   const w: any = {};
   if (args?.where) {
-    for (const [k, v] of Object.entries(args.where)) {
-      const val = v as any;
+    for (const [k, v] of Object.entries(args.where) as [string, any][]) {
       if (k === "OR") continue;
       if (k === "userId" || k === "davaId" || k === "musteriId") {
-        w[k] = val;
-      } else if (val && typeof val === "object" && "contains" in val) {
-        w[k] = { contains: val.contains, mode: "insensitive" };
+        w[k] = v;
+      } else if (v && typeof v === "object" && "contains" in v) {
+        w[k] = { contains: v.contains, mode: "insensitive" };
       } else if (k === "durum") {
-        w.durum = val;
+        w.durum = v;
       } else if (k === "tamamlandi") {
-        w.tamamlandi = val;
-      } else if (k === "dava" && val?.userId) {
-        w.dava = { userId: val.userId };
-      } else if (k === "tarih" && val?.gte && val?.lte) {
-        w.tarih = { gte: new Date(val.gte), lte: new Date(val.lte) };
+        w.tamamlandi = v;
+      } else if (k === "dava" && v?.userId) {
+        w.dava = { userId: v.userId };
+      } else if (k === "tarih" && v?.gte && v?.lte) {
+        w.tarih = { gte: new Date(v.gte), lte: new Date(v.lte) };
       } else if (k === "id") {
-        w.id = val;
+        w.id = v;
       } else if (k === "dosyaNo") {
-        w.dosyaNo = val;
+        w.dosyaNo = v;
       } else if (k === "email") {
-        w.email = val;
+        w.email = v;
       } else if (k === "subdomain") {
-        w.subdomain = val;
+        w.subdomain = v;
       } else if (k === "tcKimlik") {
-        w.tcKimlik = val;
+        w.tcKimlik = v;
       } else {
-        w[k] = val;
+        w[k] = v;
       }
     }
   }
