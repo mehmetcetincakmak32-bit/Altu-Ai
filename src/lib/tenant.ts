@@ -37,7 +37,7 @@ export async function createTenantForUser(
 
   ensureTenantDir(subdomain);
 
-  const emptyFiles = ["davas.json", "durusmalar.json", "musteriler.json", "isler.json", "masraflar.json", "faturas.json", "esmm.json", "belgeler.json", "emsal_karar.json", "ai_knowledge.json"];
+  const emptyFiles = ["davas.json", "durusmalar.json", "musteriler.json", "isler.json", "masraflar.json", "belgeler.json", "emsal_karar.json", "ai_knowledge.json"];
   for (const file of emptyFiles) {
     const filePath = path.join(TENANTS_DIR, subdomain, file);
     if (!fs.existsSync(filePath)) {
@@ -47,8 +47,7 @@ export async function createTenantForUser(
       else if (file === "musteriler.json") defaultData = { musteriler: [] };
       else if (file === "isler.json") defaultData = { isler: [] };
       else if (file === "masraflar.json") defaultData = { masraflar: [] };
-      else if (file === "faturas.json") defaultData = { faturas: [] };
-      else if (file === "esmm.json") defaultData = { esmm: [] };
+
       else if (file === "belgeler.json") defaultData = { belgeler: [] };
       else if (file === "emsal_karar.json") defaultData = [];
       else if (file === "ai_knowledge.json") defaultData = { knowledge: [] };

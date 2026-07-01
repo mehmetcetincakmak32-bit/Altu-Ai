@@ -431,7 +431,7 @@ export function runWithTenant<T>(subdomain: string, fn: () => Promise<T>): Promi
 
 export const prisma = {
   user: {
-    findUnique: async (args: { where: { email?: string; id?: string; subdomain?: string } }) => {
+    findUnique: async (args: any) => {
       const data = readJson<{ users: User[] }>("users.json", { users: [] });
       if (args.where.email) {
         return data.users.find((u) => u.email === args.where.email) || null;
@@ -444,7 +444,7 @@ export const prisma = {
       }
       return null;
     },
-    create: async (args: { data: Omit<User, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ users: User[] }>("users.json", { users: [] });
       const newUser: User = {
         ...args.data,
@@ -455,7 +455,7 @@ export const prisma = {
       writeJson("users.json", data);
       return newUser;
     },
-    update: async (args: { where: { id: string }; data: Partial<User> }) => {
+    update: async (args: any) => {
       const data = readJson<{ users: User[] }>("users.json", { users: [] });
       const idx = data.users.findIndex((u) => u.id === args.where.id);
       if (idx === -1) throw new Error("User not found");
@@ -463,7 +463,7 @@ export const prisma = {
       writeJson("users.json", data);
       return data.users[idx];
     },
-    deleteMany: async (args: { where: { email: string } }) => {
+    deleteMany: async (args: any) => {
       const data = readJson<{ users: User[] }>("users.json", { users: [] });
       const initialLength = data.users.length;
       data.users = data.users.filter((u) => u.email !== args.where.email);
@@ -472,11 +472,11 @@ export const prisma = {
     }
   },
   dava: {
-    count: async (args: { where: { userId: string; durum?: string } }) => {
+    count: async (args: any) => {
       const data = readJson<{ davas: Dava[] }>("davas.json", { davas: [] }, { userId: args.where.userId });
       return data.davas.filter((d) => !args.where.durum || d.durum === args.where.durum).length;
     },
-    findMany: async (args: { where: { userId: string; OR?: any[]; kategori?: string; atananAvukatId?: string }; orderBy?: { createdAt: "desc" }; take?: number }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ davas: Dava[] }>("davas.json", { davas: [] }, { userId: args.where.userId });
       let list = data.davas.filter((d) => {
         if (args.where.kategori && args.where.kategori !== "all" && d.kategori !== args.where.kategori) return false;
@@ -486,7 +486,7 @@ export const prisma = {
       
       if (args.where.OR) {
         list = list.filter((d) => {
-          return args.where.OR!.some((cond) => {
+          return args.where.OR!.some((cond: any) => {
             return Object.entries(cond).some(([key, val]: [string, any]) => {
               if (val && typeof val === "object" && "contains" in val) {
                 const searchStr = val.contains.toLowerCase();
@@ -514,7 +514,7 @@ export const prisma = {
         durusmalar: durusmalar.durusmalar.filter((dur) => dur.davaId === d.id).sort((a, b) => new Date(b.tarih).getTime() - new Date(a.tarih).getTime()),
       }));
     },
-    findFirst: async (args: { where: { id?: string; dosyaNo?: string; userId: string } }) => {
+    findFirst: async (args: any) => {
       const data = readJson<{ davas: Dava[] }>("davas.json", { davas: [] }, { userId: args.where.userId });
       const d = data.davas.find((d) => args.where.id ? d.id === args.where.id : d.dosyaNo === args.where.dosyaNo);
       if (!d) return null;
@@ -534,7 +534,7 @@ export const prisma = {
         tebligatlar: tebligatlar.tebligatlar.filter((t) => t.davaId === d.id).sort((a, b) => new Date(b.gonderimTarihi || "").getTime() - new Date(a.gonderimTarihi || "").getTime()),
       };
     },
-    findUnique: async (args: { where: { dosyaNo: string } }) => {
+    findUnique: async (args: any) => {
       // Find dava globally (or search through tenants folders)
       const globalDavas = readJson<{ davas: Dava[] }>("davas.json", { davas: [] });
       let dava = globalDavas.davas.find((d) => d.dosyaNo === args.where.dosyaNo);
@@ -556,7 +556,7 @@ export const prisma = {
       }
       return null;
     },
-    create: async (args: { data: Omit<Dava, "id" | "createdAt" | "updatedAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ davas: Dava[] }>("davas.json", { davas: [] }, { userId: args.data.userId });
       const now = new Date().toISOString();
       const newDava: Dava = {
@@ -570,7 +570,7 @@ export const prisma = {
       writeJson("davas.json", data, { userId: args.data.userId });
       return newDava;
     },
-    upsert: async (args: { where: { dosyaNo: string }; update: Partial<Dava>; create: Omit<Dava, "id" | "createdAt" | "updatedAt"> }) => {
+    upsert: async (args: any) => {
       const userId = args.create.userId;
       const data = readJson<{ davas: Dava[] }>("davas.json", { davas: [] }, { userId });
       const idx = data.davas.findIndex((d) => d.dosyaNo === args.where.dosyaNo);
@@ -592,7 +592,7 @@ export const prisma = {
         return newDava;
       }
     },
-    updateMany: async (args: { where: { id: string; userId: string }; data: Partial<Dava> }) => {
+    updateMany: async (args: any) => {
       const data = readJson<{ davas: Dava[] }>("davas.json", { davas: [] }, { userId: args.where.userId });
       let count = 0;
       data.davas = data.davas.map((d) => {
@@ -605,7 +605,7 @@ export const prisma = {
       writeJson("davas.json", data, { userId: args.where.userId });
       return { count };
     },
-    deleteMany: async (args: { where: { id: string; userId: string } }) => {
+    deleteMany: async (args: any) => {
       const data = readJson<{ davas: Dava[] }>("davas.json", { davas: [] }, { userId: args.where.userId });
       const initialLength = data.davas.length;
       data.davas = data.davas.filter((d) => d.id !== args.where.id);
@@ -645,7 +645,7 @@ export const prisma = {
       }
       return list;
     },
-    findFirst: async (args: { where: { id?: string; userId: string; tcKimlik?: string } }) => {
+    findFirst: async (args: any) => {
       const data = readJson<{ musteriler: Mesteri[] }>("musteriler.json", { musteriler: [] }, { userId: args.where.userId });
       const m = data.musteriler.find((m) => m.userId === args.where.userId && (args.where.id ? m.id === args.where.id : m.tcKimlik === args.where.tcKimlik));
       if (!m) return null;
@@ -655,7 +655,7 @@ export const prisma = {
         dosyalar: davas.davas.filter((d) => d.musteriId === m.id),
       };
     },
-    create: async (args: { data: Omit<Mesteri, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ musteriler: Mesteri[] }>("musteriler.json", { musteriler: [] }, { userId: args.data.userId });
       const newMusteri: Mesteri = {
         ...args.data,
@@ -666,7 +666,7 @@ export const prisma = {
       writeJson("musteriler.json", data, { userId: args.data.userId });
       return newMusteri;
     },
-    updateMany: async (args: { where: { id: string; userId: string }; data: Partial<Mesteri> }) => {
+    updateMany: async (args: any) => {
       const data = readJson<{ musteriler: Mesteri[] }>("musteriler.json", { musteriler: [] }, { userId: args.where.userId });
       let count = 0;
       data.musteriler = data.musteriler.map((m) => {
@@ -679,7 +679,7 @@ export const prisma = {
       writeJson("musteriler.json", data, { userId: args.where.userId });
       return { count };
     },
-    deleteMany: async (args: { where: { id: string; userId: string } }) => {
+    deleteMany: async (args: any) => {
       const data = readJson<{ musteriler: Mesteri[] }>("musteriler.json", { musteriler: [] }, { userId: args.where.userId });
       const initialLength = data.musteriler.length;
       data.musteriler = data.musteriler.filter((m) => !(m.id === args.where.id && m.userId === args.where.userId));
@@ -688,13 +688,13 @@ export const prisma = {
     }
   },
   durusma: {
-    count: async (args: { where: { dava: { userId: string } } }) => {
+    count: async (args: any) => {
       const davas = readJson<{ davas: Dava[] }>("davas.json", { davas: [] }, { userId: args.where.dava.userId });
       const userDavaIds = davas.davas.filter((d) => d.userId === args.where.dava.userId).map((d) => d.id);
       const durusmalar = readJson<{ durusmalar: Durusma[] }>("durusmalar.json", { durusmalar: [] }, { userId: args.where.dava.userId });
       return durusmalar.durusmalar.filter((dur) => userDavaIds.includes(dur.davaId)).length;
     },
-    findMany: async (args: { where: { dava: { userId: string }; tarih?: { gte: Date; lte: Date } }; orderBy?: { tarih: "asc" }; take?: number }) => {
+    findMany: async (args: any) => {
       const davas = readJson<{ davas: Dava[] }>("davas.json", { davas: [] }, { userId: args.where.dava.userId });
       const userDavas = davas.davas.filter((d) => d.userId === args.where.dava.userId);
       const userDavaIds = userDavas.map((d) => d.id);
@@ -719,7 +719,7 @@ export const prisma = {
         dava: userDavas.find((d) => d.id === dur.davaId) || { ad: "Bilinmeyen Dava" },
       }));
     },
-    create: async (args: { data: Omit<Durusma, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ durusmalar: Durusma[] }>("durusmalar.json", { durusmalar: [] }, { davaId: args.data.davaId });
       const newDurusma: Durusma = {
         ...args.data,
@@ -730,7 +730,7 @@ export const prisma = {
       writeJson("durusmalar.json", data, { davaId: args.data.davaId });
       return newDurusma;
     },
-    updateMany: async (args: { where: { id: string; davaId?: string }; data: Partial<Durusma> }) => {
+    updateMany: async (args: any) => {
       const data = readJson<{ durusmalar: Durusma[] }>("durusmalar.json", { durusmalar: [] }, args.where.davaId ? { davaId: args.where.davaId } : undefined);
       let count = 0;
       data.durusmalar = data.durusmalar.map((dur) => {
@@ -745,11 +745,11 @@ export const prisma = {
     }
   },
   is: {
-    count: async (args: { where: { userId: string; tamamlandi: boolean } }) => {
+    count: async (args: any) => {
       const data = readJson<{ isler: Is[] }>("isler.json", { isler: [] }, { userId: args.where.userId });
       return data.isler.filter((i) => i.userId === args.where.userId && i.tamamlandi === args.where.tamamlandi).length;
     },
-    findMany: async (args: { where: { userId: string; durum?: string; davaId?: string }; orderBy?: any; include?: any }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ isler: Is[] }>("isler.json", { isler: [] }, { userId: args.where.userId });
       let list = data.isler.filter((i) => {
         if (args.where.durum && i.durum !== args.where.durum) return false;
@@ -772,7 +772,7 @@ export const prisma = {
       }
       return list;
     },
-    create: async (args: { data: Omit<Is, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ isler: Is[] }>("isler.json", { isler: [] }, { userId: args.data.userId });
       const newIs: Is = {
         ...args.data,
@@ -783,7 +783,7 @@ export const prisma = {
       writeJson("isler.json", data, { userId: args.data.userId });
       return newIs;
     },
-    updateMany: async (args: { where: { id: string; userId: string }; data: Partial<Is> }) => {
+    updateMany: async (args: any) => {
       const data = readJson<{ isler: Is[] }>("isler.json", { isler: [] }, { userId: args.where.userId });
       let count = 0;
       data.isler = data.isler.map((i) => {
@@ -798,12 +798,12 @@ export const prisma = {
     }
   },
   masraf: {
-    aggregate: async (args: { where: { userId: string }; _sum: { tutar: boolean } }) => {
+    aggregate: async (args: any) => {
       const data = readJson<{ masraflar: Masraf[] }>("masraflar.json", { masraflar: [] }, { userId: args.where.userId });
       const total = data.masraflar.filter((m) => m.userId === args.where.userId).reduce((acc, m) => acc + m.tutar, 0);
       return { _sum: { tutar: total } };
     },
-    groupBy: async (args: { by: string[]; where: { userId: string }; _sum: { tutar: boolean } }) => {
+    groupBy: async (args: any) => {
       const data = readJson<{ masraflar: Masraf[] }>("masraflar.json", { masraflar: [] }, { userId: args.where.userId });
       const groups: Record<string, number> = {};
       data.masraflar.filter((m) => m.userId === args.where.userId).forEach((m) => {
@@ -814,7 +814,7 @@ export const prisma = {
         _sum: { tutar: total },
       }));
     },
-    findMany: async (args: { where: { userId: string }; orderBy?: { tarih: "desc" }; include?: any }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ masraflar: Masraf[] }>("masraflar.json", { masraflar: [] }, { userId: args.where.userId });
       let list = data.masraflar.filter((m) => m.userId === args.where.userId);
       if (args.orderBy && args.orderBy.tarih === "desc") {
@@ -829,7 +829,7 @@ export const prisma = {
       }
       return list;
     },
-    create: async (args: { data: Omit<Masraf, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ masraflar: Masraf[] }>("masraflar.json", { masraflar: [] }, { userId: args.data.userId });
       const newMasraf: Masraf = {
         ...args.data,
@@ -842,7 +842,7 @@ export const prisma = {
     }
   },
   belge: {
-    findMany: async (args: { where: { userId: string; OR?: any[] }; orderBy?: { createdAt: "desc" }; take?: number; include?: any }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ belgeler: Belge[] }>("belgeler.json", { belgeler: [] }, { userId: args.where.userId });
       let list = data.belgeler.filter((b) => b.userId === args.where.userId);
       
@@ -876,7 +876,7 @@ export const prisma = {
       }
       return list;
     },
-    create: async (args: { data: Omit<Belge, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ belgeler: Belge[] }>("belgeler.json", { belgeler: [] }, { userId: args.data.userId });
       const newBelge: Belge = {
         ...args.data,
@@ -889,11 +889,11 @@ export const prisma = {
     }
   },
   dosyaDosyasi: {
-    findFirst: async (args: { where: { id: string; userId: string } }) => {
+    findFirst: async (args: any) => {
       const data = readJson<{ dosyalar: DosyaDosyasi[] }>("dosyalar.json", { dosyalar: [] }, { userId: args.where.userId });
       return data.dosyalar.find((d) => d.id === args.where.id && d.userId === args.where.userId) || null;
     },
-    findMany: async (args: { where: { userId: string; davaId?: string; orijinalAd?: { contains: string } }; orderBy?: { createdAt: "desc" }; include?: any }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ dosyalar: DosyaDosyasi[] }>("dosyalar.json", { dosyalar: [] }, { userId: args.where.userId });
       let list = data.dosyalar.filter((d) => {
         if (d.userId !== args.where.userId) return false;
@@ -913,7 +913,7 @@ export const prisma = {
       }
       return list;
     },
-    create: async (args: { data: Omit<DosyaDosyasi, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ dosyalar: DosyaDosyasi[] }>("dosyalar.json", { dosyalar: [] }, { userId: args.data.userId });
       const newDosya: DosyaDosyasi = {
         ...args.data,
@@ -924,7 +924,7 @@ export const prisma = {
       writeJson("dosyalar.json", data, { userId: args.data.userId });
       return newDosya;
     },
-    delete: async (args: { where: { id: string } }) => {
+    delete: async (args: any) => {
       // Find file globally or within tenants
       const globalDosyalar = readJson<{ dosyalar: DosyaDosyasi[] }>("dosyalar.json", { dosyalar: [] });
       const file = globalDosyalar.dosyalar.find((d) => d.id === args.where.id);
@@ -955,7 +955,7 @@ export const prisma = {
     }
   },
   eSMM: {
-    findMany: async (args: { where: { userId: string }; orderBy?: { tarih: "asc" | "desc" }; select?: any; include?: any }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ esmm: ESMM[] }>("esmm.json", { esmm: [] }, { userId: args.where.userId });
       let list = data.esmm.filter((e) => e.userId === args.where.userId);
       if (args.orderBy && args.orderBy.tarih) {
@@ -974,13 +974,13 @@ export const prisma = {
       }
       return list;
     },
-    findFirst: async (args: { where: { userId: string }; orderBy: { seriNo: "desc" }; select?: any }) => {
+    findFirst: async (args: any) => {
       const data = readJson<{ esmm: ESMM[] }>("esmm.json", { esmm: [] }, { userId: args.where.userId });
       const list = data.esmm.filter((e) => e.userId === args.where.userId);
       list.sort((a, b) => b.seriNo.localeCompare(a.seriNo));
       return list[0] || null;
     },
-    create: async (args: { data: Omit<ESMM, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ esmm: ESMM[] }>("esmm.json", { esmm: [] }, { userId: args.data.userId });
       const newESMM: ESMM = {
         ...args.data,
@@ -993,7 +993,7 @@ export const prisma = {
     }
   },
   fatura: {
-    findMany: async (args: { where: { userId: string }; orderBy?: { tarih: "desc" }; include?: any }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ faturas: Fatura[] }>("faturas.json", { faturas: [] }, { userId: args.where.userId });
       let list = data.faturas.filter((f) => f.userId === args.where.userId);
       if (args.orderBy && args.orderBy.tarih === "desc") {
@@ -1008,13 +1008,13 @@ export const prisma = {
       }
       return list;
     },
-    findFirst: async (args: { where: { userId: string }; orderBy: { faturaNo: "desc" }; select?: any }) => {
+    findFirst: async (args: any) => {
       const data = readJson<{ faturas: Fatura[] }>("faturas.json", { faturas: [] }, { userId: args.where.userId });
       const list = data.faturas.filter((f) => f.userId === args.where.userId);
       list.sort((a, b) => b.faturaNo.localeCompare(a.faturaNo));
       return list[0] || null;
     },
-    create: async (args: { data: Omit<Fatura, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ faturas: Fatura[] }>("faturas.json", { faturas: [] }, { userId: args.data.userId });
       const newFatura: Fatura = {
         ...args.data,
@@ -1027,7 +1027,7 @@ export const prisma = {
     }
   },
   log: {
-    findMany: async (args: { where?: { userId?: string }; orderBy?: { createdAt: "desc" }; take?: number }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ logs: Log[] }>("logs.json", { logs: [] }, args.where?.userId ? { userId: args.where.userId } : undefined);
       let list = args.where?.userId
         ? data.logs.filter((l) => l.userId === args.where.userId)
@@ -1040,7 +1040,7 @@ export const prisma = {
       }
       return list;
     },
-    create: async (args: { data: Omit<Log, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ logs: Log[] }>("logs.json", { logs: [] }, args.data.userId ? { userId: args.data.userId } : undefined);
       const newLog: Log = {
         ...args.data,
@@ -1051,7 +1051,7 @@ export const prisma = {
       writeJson("logs.json", data, args.data.userId ? { userId: args.data.userId } : undefined);
       return newLog;
     },
-    deleteMany: async (args?: { where?: { userId?: string } }) => {
+    deleteMany: async (args?: any) => {
       const data = readJson<{ logs: Log[] }>("logs.json", { logs: [] }, args?.where?.userId ? { userId: args.where.userId } : undefined);
       const initialLength = data.logs.length;
       if (args?.where?.userId) {
@@ -1064,7 +1064,7 @@ export const prisma = {
     }
   },
   tebligat: {
-    findMany: async (args: { where: { userId: string; durum?: string }; orderBy?: { gonderimTarihi: "desc" | "asc" }; take?: number }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ tebligatlar: Tebligat[] }>("tebligatlar.json", { tebligatlar: [] }, { userId: args.where.userId });
       let list = data.tebligatlar.filter((t) => {
         if (t.userId !== args.where.userId) return false;
@@ -1084,7 +1084,7 @@ export const prisma = {
       }
       return list;
     },
-    create: async (args: { data: Omit<Tebligat, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ tebligatlar: Tebligat[] }>("tebligatlar.json", { tebligatlar: [] }, { userId: args.data.userId });
       const newTebligat: Tebligat = {
         ...args.data,
@@ -1095,7 +1095,7 @@ export const prisma = {
       writeJson("tebligatlar.json", data, { userId: args.data.userId });
       return newTebligat;
     },
-    updateMany: async (args: { where: { id: string; userId: string }; data: Partial<Tebligat> }) => {
+    updateMany: async (args: any) => {
       const data = readJson<{ tebligatlar: Tebligat[] }>("tebligatlar.json", { tebligatlar: [] }, { userId: args.where.userId });
       let count = 0;
       data.tebligatlar = data.tebligatlar.map((t) => {
@@ -1110,7 +1110,7 @@ export const prisma = {
     }
   },
   davaHareketi: {
-    findMany: async (args: { where: { davaId: string; userId: string }; orderBy?: { tarih: "desc" } }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ hareketler: DavaHareketi[] }>("dava_hareketleri.json", { hareketler: [] }, { userId: args.where.userId });
       let list = data.hareketler.filter((h) => h.davaId === args.where.davaId);
       if (args.orderBy && args.orderBy.tarih === "desc") {
@@ -1118,7 +1118,7 @@ export const prisma = {
       }
       return list;
     },
-    create: async (args: { data: Omit<DavaHareketi, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ hareketler: DavaHareketi[] }>("dava_hareketleri.json", { hareketler: [] }, { userId: args.data.userId });
       const newHareketi: DavaHareketi = {
         ...args.data,
@@ -1131,7 +1131,7 @@ export const prisma = {
     }
   },
   tahsilat: {
-    findMany: async (args: { where: { userId: string; davaId?: string }; orderBy?: { vadeTarihi: "asc" | "desc" } }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ tahsilatlar: Tahsilat[] }>("tahsilatlar.json", { tahsilatlar: [] }, { userId: args.where.userId });
       let list = data.tahsilatlar.filter((t) => {
         if (t.userId !== args.where.userId) return false;
@@ -1154,7 +1154,7 @@ export const prisma = {
       }
       return list;
     },
-    create: async (args: { data: Omit<Tahsilat, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ tahsilatlar: Tahsilat[] }>("tahsilatlar.json", { tahsilatlar: [] }, { userId: args.data.userId });
       const newTahsilat: Tahsilat = {
         ...args.data,
@@ -1165,7 +1165,7 @@ export const prisma = {
       writeJson("tahsilatlar.json", data, { userId: args.data.userId });
       return newTahsilat;
     },
-    updateMany: async (args: { where: { id: string; userId: string }; data: Partial<Tahsilat> }) => {
+    updateMany: async (args: any) => {
       const data = readJson<{ tahsilatlar: Tahsilat[] }>("tahsilatlar.json", { tahsilatlar: [] }, { userId: args.where.userId });
       let count = 0;
       data.tahsilatlar = data.tahsilatlar.map((t) => {
@@ -1178,7 +1178,7 @@ export const prisma = {
       writeJson("tahsilatlar.json", data, { userId: args.where.userId });
       return { count };
     },
-    deleteMany: async (args: { where: { id: string; userId: string } }) => {
+    deleteMany: async (args: any) => {
       const data = readJson<{ tahsilatlar: Tahsilat[] }>("tahsilatlar.json", { tahsilatlar: [] }, { userId: args.where.userId });
       const initialLength = data.tahsilatlar.length;
       data.tahsilatlar = data.tahsilatlar.filter((t) => !(t.id === args.where.id && t.userId === args.where.userId));
@@ -1209,7 +1209,7 @@ export const prisma = {
     }
   },
   hukukiCeviri: {
-    create: async (args: { data: Omit<HukukiCeviri, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ ceviriler: HukukiCeviri[] }>("hukuki_ceviriler.json", { ceviriler: [] }, { userId: args.data.userId });
       const newCeviri: HukukiCeviri = {
         ...args.data,
@@ -1220,7 +1220,7 @@ export const prisma = {
       writeJson("hukuki_ceviriler.json", data, { userId: args.data.userId });
       return newCeviri;
     },
-    findMany: async (args: { where: { userId: string }; orderBy?: { createdAt: "desc" } }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ ceviriler: HukukiCeviri[] }>("hukuki_ceviriler.json", { ceviriler: [] }, { userId: args.where.userId });
       let list = data.ceviriler.filter((c) => c.userId === args.where.userId);
       if (args.orderBy?.createdAt === "desc") {
@@ -1230,7 +1230,7 @@ export const prisma = {
     }
   },
   sozlesmeAnalizi: {
-    create: async (args: { data: Omit<SozlesmeAnalizi, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ analizler: SozlesmeAnalizi[] }>("sozlesme_analizleri.json", { analizler: [] }, { userId: args.data.userId });
       const newAnaliz: SozlesmeAnalizi = {
         ...args.data,
@@ -1241,7 +1241,7 @@ export const prisma = {
       writeJson("sozlesme_analizleri.json", data, { userId: args.data.userId });
       return newAnaliz;
     },
-    findMany: async (args: { where: { userId: string }; orderBy?: { createdAt: "desc" } }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ analizler: SozlesmeAnalizi[] }>("sozlesme_analizleri.json", { analizler: [] }, { userId: args.where.userId });
       let list = data.analizler.filter((a) => a.userId === args.where.userId);
       if (args.orderBy?.createdAt === "desc") {
@@ -1251,7 +1251,7 @@ export const prisma = {
     }
   },
   dilekecePuanlama: {
-    create: async (args: { data: Omit<DilekecePuanlama, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ puanlamalar: DilekecePuanlama[] }>("dilekce_puanlamalar.json", { puanlamalar: [] }, { userId: args.data.userId });
       const newPuanlama: DilekecePuanlama = {
         ...args.data,
@@ -1262,7 +1262,7 @@ export const prisma = {
       writeJson("dilekce_puanlamalar.json", data, { userId: args.data.userId });
       return newPuanlama;
     },
-    findMany: async (args: { where: { userId: string }; orderBy?: { createdAt: "desc" } }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ puanlamalar: DilekecePuanlama[] }>("dilekce_puanlamalar.json", { puanlamalar: [] }, { userId: args.where.userId });
       let list = data.puanlamalar.filter((p) => p.userId === args.where.userId);
       if (args.orderBy?.createdAt === "desc") {
@@ -1272,7 +1272,7 @@ export const prisma = {
     }
   },
   bulkMesaj: {
-    create: async (args: { data: Omit<BulkMesaj, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ mesajlar: BulkMesaj[] }>("bulk_mesajlar.json", { mesajlar: [] }, { userId: args.data.userId });
       const newMesaj: BulkMesaj = {
         ...args.data,
@@ -1283,7 +1283,7 @@ export const prisma = {
       writeJson("bulk_mesajlar.json", data, { userId: args.data.userId });
       return newMesaj;
     },
-    update: async (args: { where: { id: string }; data: Partial<BulkMesaj> }) => {
+    update: async (args: any) => {
       // Find the mesaj across all users
       const globalData = readJson<{ mesajlar: BulkMesaj[] }>("bulk_mesajlar.json", { mesajlar: [] });
       const idx = globalData.mesajlar.findIndex((m) => m.id === args.where.id);
@@ -1311,7 +1311,7 @@ export const prisma = {
       }
       throw new Error("BulkMesaj not found");
     },
-    findMany: async (args: { where: { userId: string }; orderBy?: { createdAt: "desc" } }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ mesajlar: BulkMesaj[] }>("bulk_mesajlar.json", { mesajlar: [] }, { userId: args.where.userId });
       let list = data.mesajlar.filter((m) => m.userId === args.where.userId);
       if (args.orderBy?.createdAt === "desc") {
@@ -1321,11 +1321,11 @@ export const prisma = {
     }
   },
   mesajlasmaAyarlari: {
-    findUnique: async (args: { where: { userId: string } }) => {
+    findUnique: async (args: any) => {
       const data = readJson<{ ayarlar: MesajlasmaAyarlari[] }>("mesajlasma_ayarlari.json", { ayarlar: [] }, { userId: args.where.userId });
       return data.ayarlar.find((a) => a.userId === args.where.userId) || null;
     },
-    upsert: async (args: { where: { userId: string }; update: Partial<MesajlasmaAyarlari>; create: Omit<MesajlasmaAyarlari, "id" | "createdAt" | "updatedAt"> }) => {
+    upsert: async (args: any) => {
       const data = readJson<{ ayarlar: MesajlasmaAyarlari[] }>("mesajlasma_ayarlari.json", { ayarlar: [] }, { userId: args.where.userId });
       const now = new Date().toISOString();
       const idx = data.ayarlar.findIndex((a) => a.userId === args.where.userId);
@@ -1342,7 +1342,7 @@ export const prisma = {
     }
   },
   kararHarita: {
-    create: async (args: { data: Omit<KararHarita, "id" | "createdAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ haritalar: KararHarita[] }>("karar_haritalari.json", { haritalar: [] }, { userId: args.data.userId });
       const newHarita: KararHarita = {
         ...args.data,
@@ -1353,7 +1353,7 @@ export const prisma = {
       writeJson("karar_haritalari.json", data, { userId: args.data.userId });
       return newHarita;
     },
-    findMany: async (args: { where: { userId: string }; orderBy?: { createdAt: "desc" } }) => {
+    findMany: async (args: any) => {
       const data = readJson<{ haritalar: KararHarita[] }>("karar_haritalari.json", { haritalar: [] }, { userId: args.where.userId });
       let list = data.haritalar.filter((h) => h.userId === args.where.userId);
       if (args.orderBy?.createdAt === "desc") {
@@ -1363,11 +1363,11 @@ export const prisma = {
     }
   },
   uetsAyarlari: {
-    findUnique: async (args: { where: { userId: string } }) => {
+    findUnique: async (args: any) => {
       const data = readJson<{ ayarlar: UetsAyarlari[] }>("uets_ayarlari.json", { ayarlar: [] }, { userId: args.where.userId });
       return data.ayarlar.find((a) => a.userId === args.where.userId) || null;
     },
-    create: async (args: { data: Omit<UetsAyarlari, "id" | "createdAt" | "updatedAt"> }) => {
+    create: async (args: any) => {
       const data = readJson<{ ayarlar: UetsAyarlari[] }>("uets_ayarlari.json", { ayarlar: [] }, { userId: args.data.userId });
       const now = new Date().toISOString();
       const newAyar: UetsAyarlari = { ...args.data, id: cuid(), createdAt: now, updatedAt: now };
@@ -1375,7 +1375,7 @@ export const prisma = {
       writeJson("uets_ayarlari.json", data, { userId: args.data.userId });
       return newAyar;
     },
-    update: async (args: { where: { userId: string }; data: Partial<UetsAyarlari> }) => {
+    update: async (args: any) => {
       const data = readJson<{ ayarlar: UetsAyarlari[] }>("uets_ayarlari.json", { ayarlar: [] }, { userId: args.where.userId });
       const idx = data.ayarlar.findIndex((a) => a.userId === args.where.userId);
       if (idx === -1) throw new Error("UetsAyarlari not found");

@@ -201,10 +201,6 @@ export async function POST(req: Request) {
     yonlendirme = "yönlendirme:belge-olustur";
   } else if (commandLower.includes("masraf") || commandLower.includes("gider")) {
     yonlendirme = "yönlendirme:masraflar";
-  } else if (commandLower.includes("esmm") || commandLower.includes("serbest meslek")) {
-    yonlendirme = "yönlendirme:esmm";
-  } else if (commandLower.includes("fatura")) {
-    yonlendirme = "yönlendirme:fatura";
   } else if (commandLower.includes("çıkış") || commandLower.includes("logout")) {
     yonlendirme = "cikis";
   }

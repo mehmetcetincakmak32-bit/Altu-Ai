@@ -50,40 +50,7 @@ export async function PUT(req: Request) {
     }
   });
 
-  // Direct integration: If marked as paid (odendi), auto-generate e-SMM!
-  if (durum === "odendi") {
-    const son = await prisma.eSMM.findFirst({
-      where: { userId: session.id },
-      orderBy: { seriNo: "desc" },
-      select: { seriNo: true }
-    });
-    const sira = son ? parseInt(son.seriNo.split("-").pop() || "0") + 1 : 1;
-    const seriNo = `SMM-${session.id.slice(0, 4).toUpperCase()}-${String(sira).padStart(4, "0")}`;
-
-    const kdvOran = 20;
-    const tutar = item.tutar;
-    const kdvTutar = tutar * (kdvOran / 100);
-    const netTutar = tutar + kdvTutar;
-
-    await prisma.eSMM.create({
-      data: {
-        musteriUnvan: item.musteriUnvan,
-        hizmetAciklamasi: item.aciklama || "Vekalet Ücreti Tahsilatı",
-        birimFiyat: tutar,
-        miktar: 1,
-        kdvOrani: kdvOran,
-        kdvTutari: kdvTutar,
-        netTutar: netTutar,
-        tutar: tutar,
-        odemeSekli: "havale",
-        seriNo,
-        davaId: item.davaId || null,
-        userId: session.id
-      }
-    });
-
-    await logKaydet("Tahsilat yapıldı ve e-SMM otomatik kesildi", seriNo, `Tutar: ${netTutar} TL`, "basari", session.id);
-  }
+  await logKaydet("Tahsilat güncellendi", id, `Yeni durum: ${durum}`, "basari", session.id);
 
   return NextResponse.json({ basarili: true });
 }

@@ -6,9 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
   },
-  experimental: {
-    serverComponentsExternalPackages: ["fs", "path"],
-  },
+  serverExternalPackages: ["fs", "path"],
 };
 
 export default nextConfig;

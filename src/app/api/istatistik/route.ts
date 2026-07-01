@@ -49,13 +49,6 @@ export async function GET() {
     include: { dava: { select: { ad: true } } },
   });
 
-  // Aylık e-SMM gelirleri
-  const esmmList = await prisma.eSMM.findMany({
-    where: { userId },
-    orderBy: { tarih: "asc" },
-    select: { tarih: true, netTutar: true },
-  });
-
   // Zamanaşımı Radarı & Süre Takip Sistemi
   const allDavas = await prisma.dava.findMany({ where: { userId } });
   const sureRadari = allDavas
@@ -104,7 +97,6 @@ export async function GET() {
     sonDurusmalar,
     aylikMasraflar,
     yaklasanDurusmalar,
-    esmmList,
     sureRadari,
   });
 }

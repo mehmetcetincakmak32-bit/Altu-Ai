@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, FolderOpen, Users, Wallet, Calendar, Bot,
   Scale, FileText, BarChart3, LogOut, ChevronLeft, ChevronRight,
-  ListTodo, FileUp, Receipt, Settings, FileSpreadsheet, Globe, Menu, X,
-  Calculator, MessageSquare, Share2, Languages, FileSearch, Gauge, ClipboardCheck,
+  ListTodo, FileUp, Settings, Globe, Menu, X,
+  Calculator, Share2, Languages, FileSearch, Gauge,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -21,25 +21,21 @@ const menuItems = [
   { href: "/dilekce-puan",   label: "Dilekçe Puan",    icon: Gauge,            group: "araclar" },
   { href: "/karar-harita",   label: "Karar Haritası",  icon: Share2,           group: "araclar" },
   { href: "/hukuki-ceviri",  label: "Hukuki Çeviri",   icon: Languages,        group: "araclar" },
-  { href: "/mesajlasma",     label: "Mesajlaşma",      icon: MessageSquare,    group: "araclar" },
   { href: "/belge-isle",     label: "Belge İşle",      icon: ClipboardCheck,   group: "araclar" },
   
   { href: "/dosya-goruntule",label: "Dosya Görüntüle", icon: FileUp,           group: "araclar" },
   { href: "/ai-asistan",     label: "Yapay Zeka",      icon: Bot,              group: "araclar" },
   { href: "/ictihat",        label: "İçtihat Ara",     icon: Scale,            group: "araclar" },
-  { href: "/uets",           label: "UETS Tebligat",   icon: ClipboardCheck,   group: "araclar" },
+
   { href: "/belge-olustur",  label: "Belge Oluştur",   icon: FileText,         group: "araclar" },
   { href: "/scraper",        label: "Site Tarayıcı",   icon: Globe,            group: "araclar" },
   { href: "/hesaplamalar",   label: "Hukuki Hesaplama", icon: Calculator,      group: "araclar" },
-  { href: "/esmm",           label: "e-SMM",           icon: FileSpreadsheet,  group: "finans" },
-  { href: "/fatura",         label: "Fatura",          icon: Receipt,          group: "finans" },
-  { href: "/raporlar",       label: "Raporlar",        icon: BarChart3,        group: "finans" },
+  { href: "/raporlar",       label: "Raporlar",        icon: BarChart3,        group: "araclar" },
   { href: "/ayarlar",        label: "Ayarlar",         icon: Settings,         group: "sistem" },
 ];
 
 const groupLabels: Record<string, string> = {
   main:    "GENEL",
-  finans:  "FİNANS",
   araclar: "ARAÇLAR",
   sistem:  "SİSTEM",
 };
@@ -58,7 +54,7 @@ export default function Sidebar() {
   }, []);
 
   // Group menu items
-  const groups = ["main", "finans", "araclar", "sistem"];
+  const groups = ["main", "araclar", "sistem"];
 
   const sidebarContent = (
     <>

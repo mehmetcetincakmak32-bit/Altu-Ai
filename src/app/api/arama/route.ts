@@ -25,7 +25,6 @@ export async function GET(req: NextRequest) {
         ],
       },
       take: 5,
-      select: { id: true, dosyaNo: true, ad: true, durum: true, musteri: { select: { ad: true, soyad: true } } },
     }),
     prisma.musteri.findMany({
       where: {
@@ -38,7 +37,6 @@ export async function GET(req: NextRequest) {
         ],
       },
       take: 5,
-      select: { id: true, ad: true, soyad: true, telefon: true },
     }),
     prisma.belge.findMany({
       where: {
@@ -49,7 +47,6 @@ export async function GET(req: NextRequest) {
         ],
       },
       take: 3,
-      select: { id: true, baslik: true, tur: true, davaId: true },
     }),
   ]);
 
