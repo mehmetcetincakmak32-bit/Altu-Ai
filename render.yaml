@@ -1,0 +1,32 @@
+services:
+  # ─── Next.js Frontend + API ───
+  - type: web
+    name: altu-nextjs
+    runtime: node
+    repo: https://github.com/mehmetcetincakmak32-bit/Altu-Ai
+    plan: free
+    buildCommand: npm run build
+    startCommand: npx next start -H 0.0.0.0 -p $PORT
+    healthCheckPath: /
+    envVars:
+      - key: JWT_SECRET
+        value: apilex-thos-gizli-anahtar-2026
+      - key: NEXT_PUBLIC_PYTHON_URL
+        fromService:
+          name: altu-python
+          type: web
+          property: url
+
+  # ─── Python FastAPI Backend ───
+  - type: web
+    name: altu-python
+    runtime: python
+    repo: https://github.com/mehmetcetincakmak32-bit/Altu-Ai
+    rootDir: python-backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
