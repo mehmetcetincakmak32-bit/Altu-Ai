@@ -94,31 +94,32 @@ function buildWhere(args: any): any {
   const w: any = {};
   if (args?.where) {
     for (const [k, v] of Object.entries(args.where)) {
+      const val = v as any;
       if (k === "OR") continue;
       if (k === "userId" || k === "davaId" || k === "musteriId") {
-        w[k] = v;
-      } else if (v && typeof v === "object" && "contains" in v) {
-        w[k] = { contains: v.contains, mode: "insensitive" };
+        w[k] = val;
+      } else if (val && typeof val === "object" && "contains" in val) {
+        w[k] = { contains: val.contains, mode: "insensitive" };
       } else if (k === "durum") {
-        w.durum = v;
+        w.durum = val;
       } else if (k === "tamamlandi") {
-        w.tamamlandi = v;
-      } else if (k === "dava" && v?.userId) {
-        w.dava = { userId: v.userId };
-      } else if (k === "tarih" && v?.gte && v?.lte) {
-        w.tarih = { gte: new Date(v.gte), lte: new Date(v.lte) };
+        w.tamamlandi = val;
+      } else if (k === "dava" && val?.userId) {
+        w.dava = { userId: val.userId };
+      } else if (k === "tarih" && val?.gte && val?.lte) {
+        w.tarih = { gte: new Date(val.gte), lte: new Date(val.lte) };
       } else if (k === "id") {
-        w.id = v;
+        w.id = val;
       } else if (k === "dosyaNo") {
-        w.dosyaNo = v;
+        w.dosyaNo = val;
       } else if (k === "email") {
-        w.email = v;
+        w.email = val;
       } else if (k === "subdomain") {
-        w.subdomain = v;
+        w.subdomain = val;
       } else if (k === "tcKimlik") {
-        w.tcKimlik = v;
+        w.tcKimlik = val;
       } else {
-        w[k] = v;
+        w[k] = val;
       }
     }
   }
