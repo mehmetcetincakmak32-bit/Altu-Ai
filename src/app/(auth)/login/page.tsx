@@ -64,7 +64,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="admin"
+              placeholder="kullanici@email.com"
               required
               disabled={yukleniyor}
             />
@@ -112,12 +112,6 @@ export default function LoginPage() {
             )}
           </button>
         </form>
-
-        {/* Demo bilgi kutusu */}
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-lg">
-          <p className="text-xs text-blue-700 font-medium">Admin Giriş Bilgileri</p>
-          <p className="text-xs text-blue-600">Kullanıcı: <strong>admin</strong> | Şifre: <strong>admin</strong></p>
-        </div>
 
         <p className="text-center text-sm text-slate-500 mt-4">
           Hesabınız yok mu? <Link href="/register" className="text-blue-600 hover:underline font-medium">Kayıt Ol</Link>

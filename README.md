@@ -19,13 +19,11 @@ Next.js + PostgreSQL + Gemini AI ile geliştirilmiş, avukatlar için modern huk
 | Backend (Node) | Next.js API Routes, Prisma ORM |
 | Backend (Python) | FastAPI, Gemini AI, MCP |
 | Database | PostgreSQL (Render) |
-| AI | Google Gemini API |
+| AI | Google Gemini API · Groq · HuggingFace |
 
 ## Canlı Demo
 
 [https://altu-nextjs.onrender.com](https://altu-nextjs.onrender.com)
-
-**Giriş:** admin / admin
 
 ## Yerel Geliştirme
 
@@ -57,5 +55,10 @@ Render Blueprint (`render.yaml`) ile tek tuşla deploy:
 DATABASE_URL=postgresql://...
 JWT_SECRET=gizli-anahtar
 PYTHON_BACKEND_URL=https://altu-python.onrender.com
-GEMINI_API_KEY=...
+GEMINI_API_KEY=...          # Zorunlu (Gemini)
+GROQ_API_KEY=...            # Opsiyonel (ücretsiz yedek AI)
+HF_API_KEY=...              # Opsiyonel (HuggingFace fallback)
+GOOGLE_CX=...               # Opsiyonel (Google Custom Search)
+GOOGLE_SEARCH_KEY=...       # Opsiyonel (Google Search API)
+NEXT_PUBLIC_PYTHON_URL=...  # Python backend URL
 ```

@@ -6,7 +6,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from dataset import dataset, TurkishLawDataset
 from scraper import scraper, TurkishLegalScraper
-from remote_sources import remote, RemoteLegalSources, MCP_SERVERS, BEDESTEN_API, MEVZUAT_API, LOCAL_MCP_ENDPOINTS
+from remote_sources import remote, RemoteLegalSources, MCP_SERVERS, BEDESTEN_API, MEVZUAT_API, LOCAL_MCP_ENDPOINTS, LOCAL_STDIO_COMMANDS
 from gemini_ai import (
     call_gemini, hukuki_ai_sor, sozlesme_analiz, dilekce_puanla,
     hukuki_cevir, karar_harita_olustur, kategori_belirle_ai,
@@ -903,9 +903,10 @@ def remote_tumu(sorgu: str = "", limit: int = 5, kategori: str = ""):
 @app.get("/api/remote/mcp-sunucular")
 def remote_mcp_sunucular():
     import requests as http_requests
+    from mcp_manager import _processes as mcp_processes
     sunucular = []
     for k, v in MCP_SERVERS.items():
-        s = {"id": k, "ad": v["name"], "github": v["github"], "yerel": False, "durum": "bilinmiyor"}
+        s = {"id": k, "ad": v["name"], "github": v["github"], "yerel": False, "durum": "bilinmiyor", "tip": v.get("type", "sse")}
         if k in LOCAL_MCP_ENDPOINTS:
             s["yerel"] = True
             try:
@@ -913,6 +914,10 @@ def remote_mcp_sunucular():
                 s["durum"] = "aktif" if r.status_code < 500 else "hata"
             except:
                 s["durum"] = "pasif"
+        elif k in LOCAL_STDIO_COMMANDS:
+            s["yerel"] = True
+            proc = mcp_processes.get(k)
+            s["durum"] = "aktif" if proc and proc.poll() is None else "pasif"
         sunucular.append(s)
     return {"sunucular": sunucular}
 

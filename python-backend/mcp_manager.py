@@ -22,30 +22,56 @@ MCP_SERVERS = {
         "port": 8025,
         "name": "Danıştay Karar Arama",
         "description": "karararama.danistay.gov.tr üzerinden emsal karar arama",
+        "type": "sse",
     },
     "yargitay": {
         "script": "yargitay_mcp_server.py",
         "port": 8026,
         "name": "Yargıtay Karar Arama",
         "description": "karararama.yargitay.gov.tr üzerinden emsal karar arama",
+        "type": "sse",
     },
     "mevzuat": {
         "script": "mevzuat_mcp_server.py",
         "port": 8027,
         "name": "Mevzuat Bilgi Sistemi",
         "description": "mevzuat.gov.tr üzerinden kanun, yönetmelik, tüzük arama",
+        "type": "sse",
     },
     "resmigazete": {
         "script": "resmigazete_mcp_server.py",
         "port": 8028,
         "name": "Resmi Gazete",
         "description": "resmigazete.gov.tr üzerinden RG yayınları arama",
+        "type": "sse",
     },
     "aym": {
         "script": "aym_mcp_server.py",
         "port": 8029,
         "name": "Anayasa Mahkemesi Kararları",
         "description": "AYM bireysel başvuru ve iptal kararları arama",
+        "type": "sse",
+    },
+    "yargi_mcp_pypi": {
+        "command": "yargi-mcp",
+        "module": "mcp_server_main",
+        "name": "Yargıtay/Danıştay/AYM (yargi-mcp)",
+        "description": "Bedesten, Anayasa, KVKK, BDDK üzerinden birleşik arama (PyPI)",
+        "type": "stdio",
+    },
+    "ictihat_pypi": {
+        "command": "turk-hukuku-ictihat",
+        "module": "turk_hukuku_ictihat.server",
+        "name": "Türk Hukuk İçtihat (UYAP)",
+        "description": "UYAP içtihat arama motoru üzerinden Yargıtay/Danıştay kararları (PyPI)",
+        "type": "stdio",
+    },
+    "mevzuat_pypi": {
+        "command": "turk-hukuku-mevzuat",
+        "module": "turk_hukuku_mevzuat.server",
+        "name": "Türk Hukuk Mevzuat",
+        "description": "mevzuat.gov.tr üzerinden kanun, yönetmelik, tüzük metinleri (PyPI)",
+        "type": "stdio",
     },
 }
 
@@ -63,6 +89,33 @@ def start_server(name: str) -> bool:
         logger.error(f"'{name}' bilinmeyen sunucu.")
         return False
 
+    server_type = info.get("type", "sse")
+
+    if server_type == "stdio":
+        command = info.get("command")
+        if not command:
+            logger.error(f"'{name}' için komut tanımlanmamış.")
+            return False
+
+        try:
+            log_dir = Path(__file__).parent / "logs"
+            log_dir.mkdir(exist_ok=True)
+            log_file = log_dir / f"{name}.log"
+            log_file_handle = open(log_file, "w", encoding="utf-8")
+
+            proc = subprocess.Popen(
+                [sys.executable, "-m", info["module"]],
+                stdout=log_file_handle,
+                stderr=log_file_handle,
+            )
+            _processes[name] = proc
+            logger.info(f"✓ '{info['name']}' başlatıldı (PID: {proc.pid}, Tip: stdio, Log: logs/{name}.log)")
+            return True
+        except Exception as e:
+            logger.error(f"'{info['name']}' başlatılamadı: {e}")
+            return False
+
+    # SSE tipi (varsayılan): yerel script dosyası
     script_path = Path(__file__).parent / info["script"]
     if not script_path.exists():
         logger.error(f"Script bulunamadı: {script_path}")
@@ -115,7 +168,20 @@ def check_server(name: str) -> dict:
     if not info:
         return {"name": name, "running": False, "status": "unknown"}
 
-    # Check if port is open directly
+    server_type = info.get("type", "sse")
+
+    if server_type == "stdio":
+        proc = _processes.get(name)
+        running = proc is not None and proc.poll() is None
+        return {
+            "name": name,
+            "port": 0,
+            "running": running,
+            "port_open": False,
+            "status": "aktif" if running else "durduruldu",
+            "type": "stdio",
+        }
+
     port_open = False
     try:
         import socket
@@ -166,11 +232,12 @@ def print_status():
     """Print a formatted status table."""
     results = status_all()
     logger.info("")
-    logger.info(f"{'Sunucu':<20} {'Port':<8} {'Durum':<15}")
-    logger.info("-" * 45)
+    logger.info(f"{'Sunucu':<30} {'Port':<8} {'Durum':<15}")
+    logger.info("-" * 55)
     for r in results:
         durum_icon = "🟢" if r["status"] == "aktif" else ("🟡" if r["status"] == "baslatildi" else "🔴")
-        logger.info(f"{durum_icon} {r['name']:<18} {r['port']:<8} {r['status']:<15}")
+        port_str = str(r.get("port", "")) if r.get("port") else "-"
+        logger.info(f"{durum_icon} {r['name']:<28} {port_str:<8} {r['status']:<15}")
 
 
 if __name__ == "__main__":

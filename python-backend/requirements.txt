@@ -5,3 +5,11 @@ requests
 python-dotenv
 mcp
 beautifulsoup4
+
+# Harici AI Servisleri
+openai
+
+# Harici MCP Sunuculari (PyPI)
+yargi-mcp>=0.2.1
+turk-hukuku-ictihat-mcp>=0.3.0
+turk-hukuku-mevzuat-mcp>=0.1.0

@@ -18,16 +18,25 @@ DATA_DIR = Path(os.getenv("DATA_DIR", str(Path(__file__).parent / "data")))
 
 # Export MCP_SERVERS to avoid ImportErrors in main.py
 MCP_SERVERS = {
-    "yargi": {"name": "Yargıtay/Danıştay/AYM", "github": "saidsurucu/yargi-mcp"},
+    "yargi": {"name": "Yargıtay/Danıştay/AYM", "github": "saidsurucu/yargi-mcp", "pypi": "yargi-mcp", "type": "stdio"},
     "mevzuat": {"name": "Mevzuat Bilgi Sistemi", "github": "saidsurucu/mevzuat-mcp"},
-    "ictihat": {"name": "UYAP İçtihat", "github": "aydincan/turk-hukuku-ictihat-mcp"},
+    "ictihat": {"name": "UYAP İçtihat", "github": "aydincan/turk-hukuku-ictihat-mcp", "pypi": "turk-hukuku-ictihat-mcp", "type": "stdio"},
     "kanunlar": {"name": "Kanunlar Veritabanı", "github": "Ansvar-Systems/turkish-law-mcp"},
     "acik_mevzuat": {"name": "Açık Mevzuat", "github": "onurcan-b/acik-mevzuat"},
+    "yargi_mcp_pypi": {"name": "Yargıtay/Danıştay/AYM (PyPI)", "github": "saidsurucu/yargi-mcp", "pypi": "yargi-mcp", "type": "stdio"},
+    "ictihat_pypi": {"name": "Türk Hukuk İçtihat (PyPI)", "github": "aydincan/turk-hukuku-ictihat-mcp", "pypi": "turk-hukuku-ictihat-mcp", "type": "stdio"},
+    "mevzuat_pypi": {"name": "Türk Hukuk Mevzuat (PyPI)", "github": "aydincan/turk-hukuku-mevzuat-mcp", "pypi": "turk-hukuku-mevzuat-mcp", "type": "stdio"},
     "danistay": {"name": "Danıştay Karar Arama (Özel)", "github": "altu-ai/danistay-mcp"},
     "yargitay": {"name": "Yargıtay Karar Arama (Özel)", "github": "altu-ai/yargitay-mcp"},
     "mevzuat_local": {"name": "Mevzuat Bilgi Sistemi (Özel)", "github": "altu-ai/mevzuat-mcp"},
     "resmigazete_local": {"name": "Resmi Gazete (Özel)", "github": "altu-ai/resmigazete-mcp"},
     "aym_local": {"name": "AYM Kararları (Özel)", "github": "altu-ai/aym-mcp"},
+}
+
+LOCAL_STDIO_COMMANDS = {
+    "yargi_mcp_pypi": {"command": "yargi-mcp", "module": "mcp_server_main", "description": "Yargıtay/Danıştay/AYM/KVKK/BDDK birleşik arama"},
+    "ictihat_pypi": {"command": "turk-hukuku-ictihat", "module": "turk_hukuku_ictihat.server", "description": "UYAP içtihat arama"},
+    "mevzuat_pypi": {"command": "turk-hukuku-mevzuat", "module": "turk_hukuku_mevzuat.server", "description": "Mevzuat.gov.tr arama"},
 }
 
 LOCAL_MCP_ENDPOINTS = {

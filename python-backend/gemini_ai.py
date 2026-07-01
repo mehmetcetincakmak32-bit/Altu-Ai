@@ -13,6 +13,10 @@ logger = logging.getLogger(__name__)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+HF_API_KEY = os.getenv("HF_API_KEY", "")
+HF_MODEL = os.getenv("HF_MODEL", "google/gemma-2-2b-it")
+GOOGLE_CX = os.getenv("GOOGLE_CX", "")
+GOOGLE_SEARCH_KEY = os.getenv("GOOGLE_SEARCH_KEY", "")
 
 LEGAL_SYSTEM_PROMPT = """Sen "ALTU AI" adında üst düzey bir Türk Hukuk Müşavirisin. Türk hukuk sistemine, 
 mevzuata, Resmi Gazete ilanlarına, Yargıtay, Danıştay ve Anayasa Mahkemesi kararlarına tam olarak hakimsin.
@@ -101,6 +105,10 @@ def call_gemini(prompt: str, system: str = None, temperature: float = 0.3, max_t
         # Groq'a fallback
         if GROQ_API_KEY:
             return call_groq(prompt, system, temperature, max_tokens)
+        # HuggingFace fallback
+        hf_resp = call_huggingface(prompt, system, temperature, max_tokens)
+        if hf_resp:
+            return hf_resp
         return f"AI servisi şu anda kullanılamıyor: {str(e)}"
 
 
@@ -136,6 +144,57 @@ def call_groq(prompt: str, system: str = None, temperature: float = 0.3, max_tok
     except Exception as e:
         logger.error(f"Groq API hatası: {e}")
         return f"AI servisi kullanılamıyor: {str(e)}"
+
+
+def call_huggingface(prompt: str, system: str = None, temperature: float = 0.3, max_tokens: int = 2048) -> str:
+    """HuggingFace Inference API (ücretsiz) — Gemini/Groq fallback."""
+    if not HF_API_KEY:
+        return ""
+
+    try:
+        import requests
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
+        r = requests.post(
+            f"https://api-inference.huggingface.co/models/{HF_MODEL}/v1/chat/completions",
+            headers={"Authorization": f"Bearer {HF_API_KEY}", "Content-Type": "application/json"},
+            json={"model": HF_MODEL, "messages": messages, "temperature": temperature, "max_tokens": max_tokens},
+            timeout=60,
+        )
+        r.raise_for_status()
+        data = r.json()
+        return data["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        logger.warning(f"HuggingFace API hatası: {e}")
+        return ""
+
+
+def google_search(query: str, num: int = 5) -> list:
+    """Google Programmable Search (ücretsiz: 100 sorgu/gün) ile güncel hukuki haber/mevzuat ara."""
+    if not GOOGLE_CX or not GOOGLE_SEARCH_KEY:
+        logger.warning("Google Search API anahtarları yapılandırılmamış")
+        return []
+
+    try:
+        import requests
+        r = requests.get(
+            "https://www.googleapis.com/customsearch/v1",
+            params={"key": GOOGLE_SEARCH_KEY, "cx": GOOGLE_CX, "q": query, "num": min(num, 10), "lr": "lang_tr"},
+            timeout=10,
+        )
+        r.raise_for_status()
+        data = r.json()
+        items = data.get("items", [])
+        return [
+            {"baslik": item.get("title", ""), "link": item.get("link", ""), "ozet": item.get("snippet", "")}
+            for item in items
+        ]
+    except Exception as e:
+        logger.warning(f"Google Search API hatası: {e}")
+        return []
 
 
 def hukuki_ai_sor(prompt: str, context: str = "", temperature: float = 0.3) -> str:

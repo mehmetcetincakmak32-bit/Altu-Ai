@@ -49,9 +49,6 @@ async function main() {
   writeJson("users.json", data);
 
   console.log("✅ Admin kullanıcı JSON veritabanında oluşturuldu!");
-  console.log("   Kullanıcı Adı : admin");
-  console.log("   Şifre         : admin");
-  console.log("   ID            :", admin.id);
 }
 
 main().catch((e) => {
