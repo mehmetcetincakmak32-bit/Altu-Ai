@@ -14,7 +14,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-DATA_DIR = Path(os.getenv("DATA_DIR", "/app/data"))
+DATA_DIR = Path(os.getenv("DATA_DIR", "./data"))
 SCRAPER_DIR = DATA_DIR / "scraper"
 SCRAPER_DIR.mkdir(parents=True, exist_ok=True)
 
