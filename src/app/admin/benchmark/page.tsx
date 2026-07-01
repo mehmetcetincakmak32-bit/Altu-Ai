@@ -74,10 +74,10 @@ export default function AdminBenchmarkPage() {
     <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Hukuk AI Doğrulama ve Benchmark</h1>
-        <p className="text-slate-400 text-sm mt-1">
-          HukukBERT cloze veri setini kullanarak Ollama Türkçe Hukuk modelinin hukuki terim bilgisini ve mantık yeteneğini sınayın.
-        </p>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Hukuk AI Doğrulama ve Benchmark</h1>
+          <p className="text-slate-400 text-sm mt-1">
+            HukukBERT cloze veri setini kullanarak Gemini AI'nin hukuki terim bilgisini ve mantık yeteneğini sınayın.
+          </p>
       </div>
 
       {/* Control Card */}

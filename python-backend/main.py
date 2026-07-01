@@ -19,6 +19,11 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="ALTU Python Backend")
 
+@app.get("/health")
+@app.get("/")
+def health():
+    return {"status": "ok"}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

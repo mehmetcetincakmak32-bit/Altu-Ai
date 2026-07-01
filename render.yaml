@@ -22,6 +22,8 @@ services:
           property: connectionString
       - key: NEXT_PUBLIC_PYTHON_URL
         value: ""
+      - key: PYTHON_BACKEND_URL
+        value: https://altu-python.onrender.com
 
   - type: web
     name: altu-python
@@ -31,7 +33,7 @@ services:
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    healthCheckPath: /
+    healthCheckPath: /health
     envVars:
       - key: GEMINI_API_KEY
         sync: false
