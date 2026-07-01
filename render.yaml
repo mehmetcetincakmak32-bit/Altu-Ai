@@ -1,23 +1,31 @@
+databases:
+  - name: altu-postgres
+    plan: free
+    databaseName: altuai
+    user: altuai
+
 services:
-  # ─── Next.js Frontend + API ───
   - type: web
     name: altu-nextjs
     runtime: node
     repo: https://github.com/mehmetcetincakmak32-bit/Altu-Ai
     plan: free
     buildCommand: npm run build
-    startCommand: npx next start -H 0.0.0.0 -p $PORT
+    startCommand: npx prisma migrate deploy && npx prisma db seed && npx next start -H 0.0.0.0 -p $PORT
     healthCheckPath: /
     envVars:
       - key: JWT_SECRET
         value: apilex-thos-gizli-anahtar-2026
+      - key: DATABASE_URL
+        fromDatabase:
+          name: altu-postgres
+          property: connectionString
       - key: NEXT_PUBLIC_PYTHON_URL
         fromService:
           name: altu-python
           type: web
           property: url
 
-  # ─── Python FastAPI Backend ───
   - type: web
     name: altu-python
     runtime: python
