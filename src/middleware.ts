@@ -42,9 +42,10 @@ export async function middleware(request: NextRequest) {
   // If subdomain is present and not 'www'
   if (subdomain && subdomain.toLowerCase() !== "www") {
     try {
-      const checkUrl = new URL(`/api/auth/check-subdomain?subdomain=${subdomain}`, request.url);
+      const port = process.env.PORT || "10000";
+      const checkUrl = `http://localhost:${port}/api/auth/check-subdomain?subdomain=${subdomain}`;
       
-      const res = await fetch(checkUrl.toString(), {
+      const res = await fetch(checkUrl, {
         headers: {
           // Forward the cookies (especially the token)
           "Cookie": request.headers.get("cookie") || "",
