@@ -148,10 +148,10 @@ export default function AdminBenchmarkPage() {
             <HelpCircle size={24} className="absolute text-indigo-400 animate-pulse" />
           </div>
           <div>
-            <h3 className="font-semibold text-lg text-white">Doğrulama Yapılıyor</h3>
-            <p className="text-slate-400 text-sm mt-1 max-w-sm">
-              Seçilen hukuk soruları local Ollama modeline ({`apilex-hukuk`}) soruluyor ve cevaplar kaydediliyor. Lütfen bekleyin.
-            </p>
+              <h3 className="font-semibold text-lg text-white">Doğrulama Yapılıyor</h3>
+              <p className="text-slate-400 text-sm mt-1 max-w-sm">
+                Seçilen hukuk soruları Gemini AI'ya soruluyor ve cevaplar kaydediliyor. Lütfen bekleyin.
+              </p>
           </div>
         </div>
       )}
@@ -177,7 +177,7 @@ export default function AdminBenchmarkPage() {
               <div className="flex items-baseline gap-2 mt-2">
                 <span className="text-2xl font-bold text-indigo-400 truncate max-w-full">{data.model}</span>
               </div>
-              <p className="text-[10px] text-slate-500 font-medium mt-3.5">Yerel Ollama Çalışma Zamanı</p>
+              <p className="text-[10px] text-slate-500 font-medium mt-3.5">Gemini AI (Google)</p>
             </div>
 
             {/* Correct Answers */}
