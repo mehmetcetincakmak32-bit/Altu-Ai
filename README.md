@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ALTU Hukuk Büro Yönetim Sistemi
 
-## Getting Started
+Next.js + PostgreSQL + Gemini AI ile geliştirilmiş, avukatlar için modern hukuk büro yönetim platformu.
 
-First, run the development server:
+## Özellikler
+
+- **Dosya Takibi** — Dava dosyaları, duruşmalar, müvekkil yönetimi
+- **AI Asistan** — Gemini AI ile hukuki sorgulama, içtihat tarama, dilekçe puanlama
+- **Belge İşleme** — Otomatik belge oluşturma ve analiz
+- **UYAP Entegrasyonu** — UYAP senkronizasyon ve belge okuma
+- **Hukuki Yayın Tarayıcı** — Yargıtay, Danıştay, Mevzuat, Resmi Gazete taraması
+- **MCP Sunucular** — Gömülü MCP sunucular ile hukuk kaynaklarına doğrudan erişim
+
+## Teknolojiler
+
+| Katman | Teknoloji |
+|--------|-----------|
+| Frontend | Next.js 16, React 19, Tailwind CSS |
+| Backend (Node) | Next.js API Routes, Prisma ORM |
+| Backend (Python) | FastAPI, Gemini AI, MCP |
+| Database | PostgreSQL (Render) |
+| AI | Google Gemini API |
+
+## Canlı Demo
+
+[https://altu-nextjs.onrender.com](https://altu-nextjs.onrender.com)
+
+**Giriş:** admin / admin
+
+## Yerel Geliştirme
 
 ```bash
+# 1. Python backend
+cd python-backend
+python -m venv .venv
+.venv\Scripts\activate  # Windows
+pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8765
+
+# 2. Node.js frontend (yeni terminal)
+npm install
+npx prisma db push
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deploy
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Render Blueprint (`render.yaml`) ile tek tuşla deploy:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. [render.com](https://render.com) → New Blueprint
+2. `mehmetcetincakmak32-bit/Altu-Ai` reposunu seç
+3. `GEMINI_API_KEY` gerekli
 
-## Learn More
+## Ortam Değişkenleri
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+DATABASE_URL=postgresql://...
+JWT_SECRET=gizli-anahtar
+PYTHON_BACKEND_URL=https://altu-python.onrender.com
+GEMINI_API_KEY=...
+```
