@@ -177,7 +177,7 @@ export default function AdminBenchmarkPage() {
               <div className="flex items-baseline gap-2 mt-2">
                 <span className="text-2xl font-bold text-indigo-400 truncate max-w-full">{data.model}</span>
               </div>
-              <p className="text-[10px] text-slate-500 font-medium mt-3.5">Gemini AI (Google)</p>
+              <p className="text-[10px] text-slate-500 font-medium mt-3.5">Gemini AI (Ücretsiz Uzaktan Agent)</p>
             </div>
 
             {/* Correct Answers */}

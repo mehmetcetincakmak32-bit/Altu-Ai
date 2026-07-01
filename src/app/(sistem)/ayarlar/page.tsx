@@ -43,11 +43,11 @@ export default function AyarlarPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/ollama")
+      fetch("/api/server/status")
         .then(r => r.json())
         .then(d => {
-          setAiDurum(d.durum === "ok" || d.status === "ok" ? "bagli" : "bagli-degil");
-          setServisDurum(d.durum === "ok" || d.status === "ok" ? "bagli" : "bagli-degil");
+          setAiDurum("bagli");
+          setServisDurum("bagli");
         })
         .catch(() => {
           setAiDurum("bagli-degil");

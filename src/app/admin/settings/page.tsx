@@ -14,19 +14,16 @@ export default function AdminSettingsPage() {
 
   const fetchStatus = async () => {
     try {
-      // Check Python API
-      const resPy = await fetch("http://localhost:8765/health").catch(() => null);
+      const resPy = await fetch("/api/ollama").catch(() => null);
       if (resPy && resPy.ok) {
         setPythonStatus("active");
-        const data = await resPy.json();
-        setAiDurum(data.ollama_url ? "bagli" : "bagli-degil");
+        setAiDurum("bagli");
       } else {
         setPythonStatus("offline");
         setAiDurum("bagli-degil");
       }
 
-      // Check Scraper Status
-      const resScr = await fetch("http://localhost:8765/api/scraper/durum").catch(() => null);
+      const resScr = await fetch("/api/scraper").catch(() => null);
       if (resScr && resScr.ok) {
         const data = await resScr.json();
         setScraperDurum(data);

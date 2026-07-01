@@ -5,8 +5,6 @@ import crypto from "crypto";
 
 const TMK_URL = "https://raw.githubusercontent.com/anonrig/turk-medeni-kanunu-json/master/raw-law.json";
 const GLOBAL_STORE_PATH = path.join(process.cwd(), "python-backend", "data", "vector_store", "global.json");
-const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "apilex-hukuk";
 
 function getHashEmbedding(text: string, dimensions: number = 384): number[] {
   const embedding = new Array(dimensions).fill(0.0);
@@ -30,39 +28,6 @@ async function getEmbedding(text: string): Promise<number[]> {
   if (!text.trim()) {
     return new Array(384).fill(0.0);
   }
-
-  try {
-    const res = await fetch(`${OLLAMA_URL}/api/embed`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model: OLLAMA_MODEL, input: text }),
-      signal: AbortSignal.timeout(5000)
-    });
-    if (res.ok) {
-      const resData = await res.json();
-      const embeds = resData.embeddings || [];
-      if (embeds && embeds.length > 0) {
-        return embeds[0];
-      }
-    }
-  } catch (e) {}
-
-  try {
-    const res = await fetch(`${OLLAMA_URL}/api/embeddings`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model: OLLAMA_MODEL, prompt: text }),
-      signal: AbortSignal.timeout(5000)
-    });
-    if (res.ok) {
-      const resData = await res.json();
-      const embedding = resData.embedding || [];
-      if (embedding && embedding.length > 0) {
-        return embedding;
-      }
-    }
-  } catch (e) {}
-
   return getHashEmbedding(text);
 }
 
