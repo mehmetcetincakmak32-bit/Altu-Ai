@@ -23,7 +23,7 @@ export async function smsGonder(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
     const res = await fetch(
-      `https://api.netgsm.com.tr/sms/send/get?usercode=${apiKey}&password=${apiSifre}&gsmno=${alicilar.join(",")}&message=${encodeURIComponent(icerik)}&msgheader=${encodeURIComponent(baslik)}`,
+      `https://api.netgsm.com.tr/sms/send/get?usercode=${apiKey}&password=${apiSifre}&gsmno=${alicilar.join(",")}&message=${encodeURIComponent(mesaj)}&msgheader=${encodeURIComponent(baslik)}`,
       { method: "GET", signal: controller.signal }
     );
     clearTimeout(timeoutId);

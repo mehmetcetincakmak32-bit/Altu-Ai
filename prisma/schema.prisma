@@ -4,9 +4,83 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
+enum UserRole {
+  admin
+  avukat
+  stajyer
+  asistan
+}
+
+enum DavaDurum {
+  devam_ediyor
+  kazandi
+  kaybetti
+  feragat
+  sulh
+  temyiz
+  istinaf
+  sonuclandi
+}
+
+enum IsDurum {
+  bekliyor
+  devam_ediyor
+  tamamlandi
+  iptal
+}
+
+enum IsOncelik {
+  dusuk
+  orta
+  yuksek
+  acil
+}
+
+enum MasrafKategori {
+  harclar
+  yol
+  yemek
+  kirtasiye
+  diger
+}
+
+enum OdemeSekli {
+  nakit
+  kredi_karti
+  havale
+  eft
+  cek
+}
+
+enum OdemeDurum {
+  odenmedi
+  odendi
+  kismi
+  iptal
+}
+
+enum TebligatDurum {
+  alindi
+  okundu
+  cevaplandi
+  iade
+}
+
+enum TebligatTur {
+  tebligat
+  ihtarname
+  bildirim
+}
+
+enum LogSeviye {
+  bilgi
+  uyari
+  hata
+  kritik
+}
 
 model User {
   id        String   @id @default(cuid())
@@ -20,34 +94,44 @@ model User {
   adres     String?
   telefon   String?
   imza      String?
+  uyapSifre String?
+  uyapEImza String?
+  tcNo      String?
+  subdomain String?
   rol       String   @default("avukat")
   createdAt DateTime @default(now())
 
-  dosyalar       Dava[]
-  musteri        Musteri[]
-  masraflar      Masraf[]
-  esmm           ESMM[]
-  fatura         Fatura[]
-  loglar         Log[]
-  isler          Is[]
-  belgeler       Belge[]
-  dosyaDosyalari DosyaDosyasi[]
-  uetsAyarlari     UetsAyarlari?
-  tebligatlar      Tebligat[]
+  dosyalar          Dava[]
+  musteri           Musteri[]
+  masraflar         Masraf[]
+  esmm              ESMM[]
+  fatura            Fatura[]
+  loglar            Log[]
+  isler             Is[]
+  belgeler          Belge[]
+  dosyaDosyalari    DosyaDosyasi[]
+  uetsAyarlari      UetsAyarlari?
+  tebligatlar       Tebligat[]
   mesajlasmaAyarlari MesajlasmaAyarlari?
-  bulkMesajlar     BulkMesaj[]
+  bulkMesajlar      BulkMesaj[]
+  sozlesmeAnalizleri SozlesmeAnalizi[]
+  dilekcePuanlamalar DilekecePuanlama[]
+  hukukiCeviriler   HukukiCeviri[]
+  kararHaritalar    KararHarita[]
+  tahsilatlar       Tahsilat[]
+  davaHareketleri   DavaHareketi[]
 }
 
 model Musteri {
-  id       String  @id @default(cuid())
-  ad       String
-  soyad    String
-  tcKimlik String?
-  telefon  String?
-  email    String?
-  adres    String?
-  notlar   String?
-  userId   String
+  id        String   @id @default(cuid())
+  ad        String
+  soyad     String
+  tcKimlik  String?
+  telefon   String?
+  email     String?
+  adres     String?
+  notlar    String?
+  userId    String
   createdAt DateTime @default(now())
 
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -64,21 +148,31 @@ model Dava {
   esasNo    String?
   kararNo   String?
   aciklama  String?
+  kategori  String?
+  aiAnaliz  String?
+  atananAvukatId String?
+  zamanasimiTarihi DateTime?
+  temyizSonTarihi DateTime?
+  sureTakipNotu String?
+  emsalKararlar String?
+  mahkemeModuDosyalar String?
   musteriId String?
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  musteri    Musteri?       @relation(fields: [musteriId], references: [id], onDelete: SetNull)
-  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  durusmalar Durusma[]
-  masraflar  Masraf[]
-  belgeler   Belge[]
-  dosyalar   DosyaDosyasi[]
-  isler      Is[]
-  esmm       ESMM[]
-  fatura     Fatura[]
+  musteri     Musteri?       @relation(fields: [musteriId], references: [id], onDelete: SetNull)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  durusmalar  Durusma[]
+  masraflar   Masraf[]
+  belgeler    Belge[]
+  dosyalar    DosyaDosyasi[]
+  isler       Is[]
+  esmm        ESMM[]
+  fatura      Fatura[]
   tebligatlar Tebligat[]
+  hareketler  DavaHareketi[]
+  tahsilatlar Tahsilat[]
 }
 
 model Durusma {
@@ -88,9 +182,41 @@ model Durusma {
   tarih     DateTime
   durum     String   @default("planlandi")
   davaId    String
+  tutanakOzet String?
+  sonrakiAdimlar String?
+  sesDosyasi String?
   createdAt DateTime @default(now())
 
   dava Dava @relation(fields: [davaId], references: [id], onDelete: Cascade)
+}
+
+model DavaHareketi {
+  id        String   @id @default(cuid())
+  islem     String
+  tarih     DateTime @default(now())
+  evrak     String?
+  davaId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  dava Dava  @relation(fields: [davaId], references: [id], onDelete: Cascade)
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Tahsilat {
+  id           String   @id @default(cuid())
+  musteriUnvan String
+  tutar        Float
+  vadeTarihi   DateTime
+  odemeTarihi  DateTime?
+  durum        String   @default("bekliyor")
+  aciklama     String
+  davaId       String?
+  userId       String
+  createdAt    DateTime @default(now())
+
+  dava Dava? @relation(fields: [davaId], references: [id], onDelete: SetNull)
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Is {
@@ -216,6 +342,8 @@ model SozlesmeAnalizi {
   maddeler  String?
   userId    String
   createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model DilekecePuanlama {
@@ -227,6 +355,8 @@ model DilekecePuanlama {
   oneriler  String?
   userId    String
   createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model HukukiCeviri {
@@ -237,6 +367,8 @@ model HukukiCeviri {
   ceviri    String
   userId    String
   createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model BulkMesaj {
@@ -282,6 +414,8 @@ model KararHarita {
   kenarlar  String
   userId    String
   createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UetsAyarlari {
@@ -290,6 +424,7 @@ model UetsAyarlari {
   kurumSifre String
   kullaniciAdi String
   sifre     String
+  testModu  Boolean  @default(false)
   sonGiris  DateTime?
   aktif     Boolean  @default(false)
   userId    String   @unique
@@ -301,22 +436,24 @@ model UetsAyarlari {
 }
 
 model Tebligat {
-  id           String    @id @default(cuid())
-  tebligatNo   String
-  konu         String?
-  gonderen     String?
-  alici        String?
-  tur          String    @default("tebligat")
-  durum        String    @default("alindi")
-  icerik       String?
-  dosyaUrl     String?
-  dosyaTuru    String?
+  id             String   @id @default(cuid())
+  tebligatNo     String
+  konu           String?
+  gonderen       String?
+  alici          String?
+  tur            String   @default("tebligat")
+  durum          String   @default("alindi")
+  icerik         String?
+  dosyaUrl       String?
+  dosyaTuru      String?
   gonderimTarihi DateTime?
-  okunduTarihi DateTime?
-  davaId       String?
-  uetsId       String
-  userId       String
-  createdAt    DateTime  @default(now())
+  okunduTarihi   DateTime?
+  baslik         String?
+  okundu         Boolean  @default(false)
+  davaId         String?
+  uetsId         String
+  userId         String
+  createdAt      DateTime @default(now())
 
   uets UetsAyarlari @relation(fields: [uetsId], references: [id], onDelete: Cascade)
   user User         @relation(fields: [userId], references: [id], onDelete: Cascade)

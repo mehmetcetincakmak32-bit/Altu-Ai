@@ -6,7 +6,7 @@ import {
   LayoutDashboard, FolderOpen, Users, Wallet, Calendar, Bot,
   Scale, FileText, BarChart3, LogOut, ChevronLeft, ChevronRight,
   ListTodo, FileUp, Settings, Globe, Menu, X,
-  Calculator, Share2, Languages, FileSearch, Gauge,
+  Calculator, Share2, Languages, FileSearch, Gauge, ClipboardCheck,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 

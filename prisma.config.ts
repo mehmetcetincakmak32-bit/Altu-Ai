@@ -2,6 +2,9 @@ import { defineConfig } from 'prisma/config'
 
 export default defineConfig({
   datasource: {
-    url: process.env.DATABASE_URL ?? 'file:./prisma/dev.db',
+    url: process.env.DATABASE_URL ?? 'postgresql://user:password@localhost:5432/altuai',
+  },
+  migrations: {
+    seed: 'npx tsx prisma/seed.ts',
   },
 })
