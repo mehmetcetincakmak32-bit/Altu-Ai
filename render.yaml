@@ -24,6 +24,10 @@ services:
         value: ""
       - key: PYTHON_BACKEND_URL
         value: https://altu-python.onrender.com
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=400"
+      - key: GENERATE_SOURCEMAP
+        value: "false"
 
   - type: web
     name: altu-python
