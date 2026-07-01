@@ -180,7 +180,12 @@ export interface User {
 export const prisma = {
   user: {
     findUnique: async (args: any) => {
-      const u = await realPrisma.user.findUnique({ where: buildWhere(args) });
+      const where = buildWhere(args);
+      if (where.subdomain) {
+        const u = await realPrisma.user.findFirst({ where });
+        return u ? fmtUser(u) : null;
+      }
+      const u = await realPrisma.user.findUnique({ where });
       return u ? fmtUser(u) : null;
     },
     findMany: async (args: any) => {
