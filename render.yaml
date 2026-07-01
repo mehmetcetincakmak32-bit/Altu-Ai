@@ -10,7 +10,7 @@ services:
     runtime: node
     repo: https://github.com/mehmetcetincakmak32-bit/Altu-Ai
     plan: free
-    buildCommand: npm install && npx prisma generate && npm run build
+    buildCommand: npx next telemetry disable && npm install && npx prisma generate && npm run build
     startCommand: npx prisma migrate deploy && npx prisma db seed && npx next start -H 0.0.0.0
     healthCheckPath: /
     envVars:
@@ -25,9 +25,11 @@ services:
       - key: PYTHON_BACKEND_URL
         value: https://altu-python.onrender.com
       - key: NODE_OPTIONS
-        value: "--max-old-space-size=400"
+        value: "--max-old-space-size=320"
       - key: GENERATE_SOURCEMAP
         value: "false"
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
 
   - type: web
     name: altu-python
