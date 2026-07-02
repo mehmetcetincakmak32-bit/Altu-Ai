@@ -1,8 +1,8 @@
 "use client"
 
-import { Upload, File, FileText, Image, Search, Trash2, Printer, Download } from "lucide-react"
+import { Upload, File, FileText, Image as LucideImage, Search, Trash2, Printer, Download } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
-import Image from "next/image"
+import NextImage from "next/image"
 
 function formatSize(bytes: number) {
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB"
@@ -11,7 +11,7 @@ function formatSize(bytes: number) {
 
 function getFileIcon(mime: string) {
   if (mime === "application/pdf") return FileText
-  if (mime.startsWith("image/")) return Image
+  if (mime.startsWith("image/")) return LucideImage
   return File
 }
 
@@ -284,7 +284,7 @@ export default function DosyaGoruntulePage() {
                     /\.(jpg|jpeg|png|gif|webp|bmp|tif|tiff)$/.test(n)) {
                   return (
                     <div className="relative w-full flex items-center justify-center" style={{ minHeight: '70vh' }}>
-                      <Image
+                      <NextImage
                         src={`/api/dosyalar/dosya?id=${viewerFile.id}`}
                         alt=""
                         fill
