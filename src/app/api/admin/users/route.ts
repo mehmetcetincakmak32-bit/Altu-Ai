@@ -10,7 +10,7 @@ export async function GET() {
 
   const users = await prisma.user.findMany({ where: {} });
   return NextResponse.json(users.map((u: any) => {
-    const { sifre, ...rest } = u;
+    const { sifre: _sifre, ...rest } = u;
     return rest;
   }));
 }

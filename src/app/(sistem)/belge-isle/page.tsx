@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { 
   ClipboardCheck, Upload, FileText, Sparkles, CheckCircle2, 
-  AlertCircle, ShieldCheck, Download, Edit3, Eye, FileDown
+  ShieldCheck, Edit3, Eye, FileDown
 } from "lucide-react";
 
 export default function BelgeIslePage() {

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { 
   Languages, Send, Copy, Check, Sparkles, 
-  ArrowRightLeft, FileText, History 
+  ArrowRightLeft, History 
 } from "lucide-react";
 
 export default function HukukiCeviriPage() {
@@ -51,7 +51,7 @@ export default function HukukiCeviriPage() {
       const data = await res.json();
       setCeviri(data.ceviri);
       fetchGecmis();
-    } catch (err: any) {
+    } catch (_err: any) {
       setPanikCeviri("Çeviri servisi şu anda meşgul, lütfen tekrar deneyin.");
     } finally {
       setYukleniyor(false);

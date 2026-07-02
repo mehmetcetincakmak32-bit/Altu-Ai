@@ -91,7 +91,7 @@ export default function DosyaDetayPage() {
       rec.start();
       setRecordingDurusmaId(durusmaId);
       setTranscriptText("");
-    }).catch((err) => {
+    }).catch((_err) => {
       alert("Mikrofon izni reddedildi veya mikrofon bulunamadı.");
     });
   };
@@ -123,8 +123,8 @@ export default function DosyaDetayPage() {
       } else {
         alert("AI Analizi sırasında bir hata oluştu.");
       }
-    } catch (e) {
-      console.error(e);
+    } catch (_e) {
+      console.error(_e);
       alert("Bağlantı hatası oluştu.");
     } finally {
       setProcessingHearing(null);
@@ -294,18 +294,21 @@ export default function DosyaDetayPage() {
     });
   };
 
-  useEffect(() => { fetchDava(); }, [id]);
+  useEffect(() => { fetchDava(); // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   useEffect(() => {
     if (dava && !aiAnalizMetni) {
       fetchAnaliz();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dava]);
 
   useEffect(() => {
     if (activeTab === 5) {
       fetchEmsal();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, id]);
 
   const handleSave = async () => {
@@ -638,7 +641,7 @@ export default function DosyaDetayPage() {
   const handlePrintDurusmalar = () => {
     if (!dava) return;
     const title = `${dava.dosyaNo} - Duruşma Listesi Raporu`;
-    let content = `
+    const content = `
       <html>
         <head>
           <title>${title}</title>
@@ -709,7 +712,7 @@ export default function DosyaDetayPage() {
     if (!dava) return;
     const title = `${dava.dosyaNo} - Masraf Listesi Raporu`;
     const toplamMasraf = (dava.masraflar || []).reduce((s: number, m: any) => s + (m.tutar || 0), 0);
-    let content = `
+    const content = `
       <html>
         <head>
           <title>${title}</title>
@@ -1435,7 +1438,7 @@ export default function DosyaDetayPage() {
                                   );
                                 }
                               }
-                            } catch (e) {}
+                            } catch (_e) {}
                             return null;
                           })()}
                         </div>
@@ -1452,7 +1455,7 @@ export default function DosyaDetayPage() {
                                 );
                               }
                             }
-                          } catch (e) {}
+                          } catch (_e) {}
                           return null;
                         })()}
                       </td>

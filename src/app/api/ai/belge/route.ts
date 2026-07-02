@@ -108,7 +108,7 @@ export async function POST(req: Request) {
       where: { id: session.id },
     });
     subdomain = user?.subdomain || "";
-  } catch (err) {}
+  } catch (_err) {}
 
   // 2. Call Python Backend AI (Mistral-Nemo) for document generation
   const pythonUrl = process.env.PYTHON_BACKEND_URL || "http://localhost:8765";

@@ -63,7 +63,7 @@ export default function DosyalarPage() {
 
   const handlePrintCaseList = () => {
     const title = "Aktif Dava Dosyaları Listesi";
-    let content = `
+    const content = `
       <html>
         <head>
           <title>${title}</title>
@@ -91,15 +91,15 @@ export default function DosyalarPage() {
               </tr>
             </thead>
             <tbody>
-              ${filtered.map((d: any) => `
+              ${filtered.map((_d: any) => `
                 <tr>
-                  <td><strong>${d.dosyaNo}</strong></td>
-                  <td>${d.ad}</td>
-                  <td>${kategoriEtiket[d.kategori || "diger"]}</td>
-                  <td>${d.musteri ? d.musteri.ad + " " + d.musteri.soyad : "-"}</td>
-                  <td>${d.mahkeme || "-"}</td>
-                  <td>${d.esasNo || "-"}</td>
-                  <td>${durumEtiket[d.durum] || d.durum}</td>
+                  <td><strong>${_d.dosyaNo}</strong></td>
+                  <td>${_d.ad}</td>
+                  <td>${kategoriEtiket[_d.kategori || "diger"]}</td>
+                  <td>${_d.musteri ? _d.musteri.ad + " " + _d.musteri.soyad : "-"}</td>
+                  <td>${_d.mahkeme || "-"}</td>
+                  <td>${_d.esasNo || "-"}</td>
+                  <td>${durumEtiket[_d.durum] || _d.durum}</td>
                 </tr>
               `).join("")}
             </tbody>
@@ -125,14 +125,14 @@ export default function DosyalarPage() {
     output += `Rapor Tarihi: \${new Date().toLocaleDateString("tr-TR")}\n`;
     output += `==================================================\n\n`;
     
-    filtered.forEach((d: any, idx: number) => {
-      output += `\${idx + 1}. Dosya No: \${d.dosyaNo}\n`;
-      output += `   Adı: \${d.ad}\n`;
-      output += `   Kategori: \${kategoriEtiket[d.kategori || "diger"]}\n`;
-      output += `   Müvekkil: \${d.musteri ? \`\${d.musteri.ad} \${d.musteri.soyad}\` : "-"}\n`;
-      output += `   Mahkeme: \${d.mahkeme || "-"}\n`;
-      output += `   Esas No: \${d.esasNo || "-"}\n`;
-      output += `   Durum: \${durumEtiket[d.durum] || d.durum}\n\n`;
+    filtered.forEach((_d: any, _idx: number) => {
+      output += `\${_idx + 1}. Dosya No: \${_d.dosyaNo}\n`;
+      output += `   Adı: \${_d.ad}\n`;
+      output += `   Kategori: \${kategoriEtiket[_d.kategori || "diger"]}\n`;
+      output += `   Müvekkil: \${_d.musteri ? \`\${_d.musteri.ad} \${_d.musteri.soyad}\` : "-"}\n`;
+      output += `   Mahkeme: \${_d.mahkeme || "-"}\n`;
+      output += `   Esas No: \${_d.esasNo || "-"}\n`;
+      output += `   Durum: \${durumEtiket[_d.durum] || _d.durum}\n\n`;
     });
 
     const blob = new Blob([output], { type: "text/plain;charset=utf-8" });
@@ -196,7 +196,7 @@ export default function DosyalarPage() {
         setUploadStatus("Dosya yüklenirken hata oluştu.");
         setTimeout(() => setUploadStatus(null), 3000);
       }
-    } catch (err) {
+    } catch (_err) {
       setUploadStatus("Sunucu bağlantı hatası.");
       setTimeout(() => setUploadStatus(null), 3000);
     } finally {

@@ -89,7 +89,7 @@ Yanıtını sadece ve sadece aşağıdaki gibi temiz bir JSON formatında ver, b
     const query = dava.konu || dava.ad.split("-")[1]?.trim() || dava.ad || "kira sözleşmesi";
     console.log(`[Otonom] Dava '${dava.dosyaNo}' için emsal kararlar sorgulanıyor: '${query}'`);
     
-    let parsedDecisions: EmsalKarar[] = [];
+    const parsedDecisions: EmsalKarar[] = [];
     try {
       const response = await fetch(`${PYTHON_URL}/api/remote/tumu?sorgu=${encodeURIComponent(query)}&limit=5&subdomain=${subdomain}`);
       if (response.ok) {

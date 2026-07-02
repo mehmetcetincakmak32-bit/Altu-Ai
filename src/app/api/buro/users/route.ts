@@ -31,7 +31,7 @@ export async function GET() {
       }));
       
     return NextResponse.json(buroUsers);
-  } catch (e) {
+  } catch (_e) {
     return NextResponse.json([]);
   }
 }

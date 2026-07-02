@@ -33,7 +33,7 @@ export default function LoginPage() {
       } else {
         setHata(data.hata || "Giriş başarısız");
       }
-    } catch (err) {
+    } catch (_err) {
       setHata("Sunucuya bağlanılamadı. Lütfen tekrar deneyin.");
     } finally {
       setYukleniyor(false);

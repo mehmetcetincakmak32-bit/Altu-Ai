@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { Scale, Shield, Zap, Search, ChevronRight, CheckCircle2, FileText, Calendar, Award, Database, Volume2 } from "lucide-react";
+import { Scale, Shield, Zap, Search, ChevronRight, Calendar, Award, Database, Volume2 } from "lucide-react";
 
 import { Metadata } from "next";
 

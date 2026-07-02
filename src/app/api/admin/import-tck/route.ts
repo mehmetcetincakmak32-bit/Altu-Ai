@@ -68,7 +68,7 @@ export async function GET() {
 
     let addedCount = 0;
     let skippedCount = 0;
-    let updatedCount = 0;
+    let _updatedCount = 0;
 
     for (const key of keys) {
       const madde = maddeler[key];
@@ -117,7 +117,7 @@ export async function GET() {
               embedding: embedding
             });
           }
-          updatedCount++;
+          _updatedCount++;
         } else {
           skippedCount += chunks.length;
         }

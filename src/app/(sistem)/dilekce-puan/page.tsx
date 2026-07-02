@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { 
   Gauge, Send, CheckCircle2, AlertOctagon, 
-  HelpCircle, Lightbulb, Sparkles, FileText, ChevronRight
+  Lightbulb, Sparkles, FileText, ChevronRight
 } from "lucide-react";
 
 export default function DilekcePuanPage() {

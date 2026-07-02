@@ -23,8 +23,17 @@ interface Profil {
   subdomain: string;
 }
 
+const DurumBadge = ({ durum }: { durum: string }) => {
+  if (durum === "kontrol-ediliyor") {
+    return <div className="w-4 h-4 border-2 border-slate-300 border-t-blue-500 rounded-full animate-spin" />;
+  }
+  return durum === "bagli"
+    ? <CheckCircle size={18} className="text-emerald-500" />
+    : <XCircle size={18} className="text-red-500" />;
+};
+
 export default function AyarlarPage() {
-  const { shouldHideUyapSync, isMobileOrTablet } = usePWA();
+  const { shouldHideUyapSync, isMobileOrTablet: _isMobileOrTablet } = usePWA();
 
   const [aiDurum, setAiDurum] = useState("kontrol-ediliyor");
   const [servisDurum, setServisDurum] = useState("kontrol-ediliyor");
@@ -45,7 +54,7 @@ export default function AyarlarPage() {
     Promise.all([
       fetch("/api/server/status")
         .then(r => r.json())
-        .then(d => {
+        .then(_d => {
           setAiDurum("bagli");
           setServisDurum("bagli");
         })
@@ -286,15 +295,6 @@ export default function AyarlarPage() {
     } finally {
       setEsitleniyor(false);
     }
-  };
-
-  const DurumBadge = ({ durum }: { durum: string }) => {
-    if (durum === "kontrol-ediliyor") {
-      return <div className="w-4 h-4 border-2 border-slate-300 border-t-blue-500 rounded-full animate-spin" />;
-    }
-    return durum === "bagli"
-      ? <CheckCircle size={18} className="text-emerald-500" />
-      : <XCircle size={18} className="text-red-500" />;
   };
 
   const inputCls = "w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white transition-all";

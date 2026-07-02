@@ -85,7 +85,7 @@ export async function whatsappGonder(
   ayarlar: { apiKey?: string; telNo?: string }
 ): Promise<GonderimSonuc> {
   const apiKey = ayarlar.apiKey || process.env.WHATSAPP_API_KEY || "";
-  const telNo = ayarlar.telNo || process.env.WHATSAPP_TEL_NO || "905551234567";
+  const _telNo = ayarlar.telNo || process.env.WHATSAPP_TEL_NO || "905551234567";
 
   if (!apiKey) {
     return { basarili: false, hata: "WhatsApp API anahtarı eksik", gonderilenSayi: 0 };

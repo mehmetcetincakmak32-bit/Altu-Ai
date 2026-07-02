@@ -3,7 +3,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import os from "os";
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ hata: "Yetkisiz" }, { status: 401 });

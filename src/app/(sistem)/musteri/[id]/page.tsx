@@ -39,7 +39,8 @@ export default function MusteriDetayPage() {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchMusteri(); }, [id]);
+  useEffect(() => { fetchMusteri(); // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault();

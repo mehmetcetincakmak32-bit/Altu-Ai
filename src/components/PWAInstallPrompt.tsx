@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, Download, Smartphone } from "lucide-react";
+import { X, Download } from "lucide-react";
 import { usePWA } from "@/hooks/usePWA";
 
 export function PWAInstallPrompt() {
-  const { canInstall, install, isPWA, isMobileOrTablet } = usePWA();
+  const { canInstall, install, isPWA, isMobileOrTablet: _isMobileOrTablet } = usePWA();
   const [show, setShow] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 

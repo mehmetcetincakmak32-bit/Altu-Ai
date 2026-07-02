@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, FolderOpen, Users, Wallet, Calendar, Bot,
+  LayoutDashboard, FolderOpen, Users, Calendar, Bot,
   Scale, FileText, BarChart3, LogOut, ChevronLeft, ChevronRight,
   ListTodo, FileUp, Settings, Globe, Menu, X,
   Calculator, Share2, Languages, FileSearch, Gauge, ClipboardCheck,

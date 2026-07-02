@@ -52,6 +52,7 @@ export default function IslerPage() {
     fetch("/api/dosyalar")
       .then((r) => r.json())
       .then(setDosyalar);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [durumFilter]);
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Mic, MicOff, Volume2, X, Zap } from "lucide-react";
+import { Mic, Volume2, X, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // ─── Dalga Animasyonu ────────────────────────────────────────────────────────
@@ -67,6 +67,7 @@ export default function VoiceControl() {
       if (handsFreRef.current) setTimeout(() => startListening(), 500);
     };
     synth.speak(utterance);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ─── Komut işleme ─────────────────────────────────────────────────────────

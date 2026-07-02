@@ -36,6 +36,6 @@ export async function PUT(req: Request) {
   const session = await getSession();
   if (!session) return NextResponse.json({ hata: "Yetkisiz" }, { status: 401 });
   const { id, ...data } = await req.json();
-  const is = await prisma.is.updateMany({ where: { id, userId: session.id }, data });
+  await prisma.is.updateMany({ where: { id, userId: session.id }, data });
   return NextResponse.json({ basarili: true });
 }

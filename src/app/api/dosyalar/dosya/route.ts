@@ -106,7 +106,7 @@ export async function POST(req: Request) {
         imzaTarihi
       };
       savedEtiketler = JSON.stringify(meta);
-    } catch(e) {}
+    } catch(_e) {}
   }
 
   const dosya = await prisma.dosyaDosyasi.create({

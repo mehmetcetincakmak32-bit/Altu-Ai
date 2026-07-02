@@ -26,7 +26,7 @@ export default function ScraperPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ hedef }),
     });
-    const data = await res.json();
+    void res.json();
     setSonuc(`Tarama tamamlandı`);
     setTaraniyor(false);
     durumGetir();

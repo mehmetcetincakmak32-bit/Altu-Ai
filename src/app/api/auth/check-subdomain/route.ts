@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
           }
         }
       }
-    } catch (e) {
+    } catch (_e) {
       // Invalid token
     }
   }

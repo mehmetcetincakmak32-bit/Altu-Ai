@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { 
-  Share2, Search, Sparkles, AlertCircle, 
-  HelpCircle, Plus, Eye, History, BookOpen 
+  Share2, Search, Sparkles, 
+  Plus, Eye, History, BookOpen 
 } from "lucide-react";
 
 export default function KararHaritaPage() {
@@ -58,7 +58,7 @@ export default function KararHaritaPage() {
           kenarlar: JSON.parse(data.kenarlar)
         });
       }
-    } catch (err: any) {
+    } catch (_err: any) {
       setHata("Bağlantı hatası oluştu.");
     } finally {
       setYukleniyor(false);

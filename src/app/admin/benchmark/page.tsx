@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Play, RotateCcw, AlertTriangle, CheckCircle2, XCircle, Info, HelpCircle } from "lucide-react";
+import { Play, AlertTriangle, CheckCircle2, XCircle, HelpCircle } from "lucide-react";
 
 interface TestResultDetail {
   id: string;

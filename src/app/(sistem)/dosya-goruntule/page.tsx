@@ -2,6 +2,7 @@
 
 import { Upload, File, FileText, Image, Search, Trash2, Printer, Download } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
+import Image from "next/image"
 
 function formatSize(bytes: number) {
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB"
@@ -53,6 +54,7 @@ export default function DosyaGoruntulePage() {
 
   useEffect(() => {
     loadFiles()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDava, search])
 
   async function handleUpload(file: File) {
@@ -281,11 +283,15 @@ export default function DosyaGoruntulePage() {
                 if (["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff"].includes(m) ||
                     /\.(jpg|jpeg|png|gif|webp|bmp|tif|tiff)$/.test(n)) {
                   return (
-                    <img
-                      src={`/api/dosyalar/dosya?id=${viewerFile.id}`}
-                      alt=""
-                      className="max-w-full max-h-[70vh] object-contain"
-                    />
+                    <div className="relative w-full flex items-center justify-center" style={{ minHeight: '70vh' }}>
+                      <Image
+                        src={`/api/dosyalar/dosya?id=${viewerFile.id}`}
+                        alt=""
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, 80vw"
+                      />
+                    </div>
                   )
                 }
                 if (m.includes("udf") || n.endsWith(".udf")) {

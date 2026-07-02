@@ -6,7 +6,7 @@ import { Settings, Server, RefreshCw, Database, Download, CheckCircle, XCircle, 
 export default function AdminSettingsPage() {
   const [aiDurum, setAiDurum] = useState("kontrol-ediliyor");
   const [scraperDurum, setScraperDurum] = useState<any>({});
-  const [pythonStatus, setPythonStatus] = useState("checking");
+  const [_pythonStatus, setPythonStatus] = useState("checking");
   const [mesaj, setMesaj] = useState("");
   const [mesajTur, setMesajTur] = useState<"success" | "error">("success");
   const [yedekleniyor, setYedekleniyor] = useState(false);

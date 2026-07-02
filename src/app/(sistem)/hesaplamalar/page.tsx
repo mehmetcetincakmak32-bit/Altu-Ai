@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calculator, Wallet, Scale, Clock, Coins, Receipt, Percent, FileText, ArrowRight } from "lucide-react";
+import { Calculator, Wallet, Scale, Clock, Coins, Receipt } from "lucide-react";
 
 export default function HesaplamalarPage() {
   const [activeCalc, setActiveCalc] = useState<"kidem" | "faiz" | "aaut">("kidem");

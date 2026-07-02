@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import {
   FolderOpen, Users, Scale, Calendar, Wallet, AlertCircle,
-  Clock, TrendingUp, ArrowRight, UploadCloud, Download, HelpCircle,
-  CheckCircle2, FileText, Check, AlertTriangle
+  Clock, TrendingUp, ArrowRight, UploadCloud, Download,
+  CheckCircle2, FileText, AlertTriangle
 } from "lucide-react";
 import Link from "next/link";
 import BarChart from "@/components/charts/BarChart";
@@ -152,8 +152,8 @@ function StatCard({
 
 export default function DashboardPage() {
   const [data, setData] = useState<Istatistik | null>(null);
-  const [uyapYeniDosyaSayisi, setUyapYeniDosyaSayisi] = useState<number | null>(null);
-  const [showNotification, setShowNotification] = useState(false);
+  const [_uyapYeniDosyaSayisi, _setUyapYeniDosyaSayisi] = useState<number | null>(null);
+  const [_showNotification, _setShowNotification] = useState(false);
 
   // Evrak Yükleme State'leri
   const [uploading, setUploading] = useState(false);
@@ -218,7 +218,7 @@ export default function DashboardPage() {
               matchInfo += ` | ⚠️ E-İmza: GEÇERSİZ!`;
             }
           }
-        } catch (e) {}
+        } catch (_e) {}
 
         setUploadResult({
           originalName: data.orijinalAd,
@@ -238,7 +238,7 @@ export default function DashboardPage() {
           error: errData.hata || "Yükleme sırasında bir hata oluştu.",
         });
       }
-    } catch (err) {
+    } catch (_err) {
       setUploadResult({
         originalName: file.name,
         size: file.size,

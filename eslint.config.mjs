@@ -16,6 +16,9 @@ const eslintConfig = defineConfig([
     "create-admin.js",
     "prisma.config.js",
     "prisma/**",
+    ".opencode/**",
+    "python-backend/**",
+    "src/generated/**",
   ]),
   {
     rules: {
@@ -27,7 +30,7 @@ const eslintConfig = defineConfig([
       "react-hooks/static-components": "off",
       "react/no-unescaped-entities": "off",
       "prefer-const": "warn",
-      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     },
   },
 ]);

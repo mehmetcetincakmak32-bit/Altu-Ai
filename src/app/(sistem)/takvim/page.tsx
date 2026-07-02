@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, X, Calendar, Download } from "lucide-react";
+import { Plus, X, Download } from "lucide-react";
 
 interface Dava {
   id: string;

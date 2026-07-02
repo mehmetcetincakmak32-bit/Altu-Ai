@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       const token = authHeader.substring(7);
       try {
         session = verifyToken(token);
-      } catch (err) {}
+      } catch (_err) {}
     }
   }
   if (!session) return NextResponse.json({ hata: "Yetkisiz" }, { status: 401 });
